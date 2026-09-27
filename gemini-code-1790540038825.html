@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بنك أسئلة الدرس 1-1: عربي ولغات</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700&display=swap');
+
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #3b82f6;
+      --secondary: #0d9488;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --correct: #16a34a;
+      --wrong: #dc2626;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Cairo', 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 24px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .title-area h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    .title-area p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .score-board {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #172554;
+    }
+
+    .btn-outline {
+      background-color: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .question-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .question-card.en-card {
+      direction: ltr;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      border-left: 4px solid var(--secondary);
+      border-right: 1px solid var(--border);
+      background-color: #fcfdfe;
+    }
+
+    .question-card.ar-card {
+      border-right: 4px solid var(--primary-light);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .badge-ar {
+      background-color: #dbeafe;
+      color: #1e40af;
+    }
+
+    .badge-en {
+      background-color: #ccfbf1;
+      color: #0f766e;
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 640px) {
+      .options-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .option-btn {
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      background: white;
+      border-radius: 8px;
+      text-align: inherit;
+      font-size: 0.95rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary-light);
+      background-color: #eff6ff;
+    }
+
+    .option-btn.correct {
+      background-color: #dcfce7 !important;
+      border-color: var(--correct) !important;
+      color: #14532d;
+      font-weight: 700;
+    }
+
+    .option-btn.wrong {
+      background-color: #fee2e2 !important;
+      border-color: var(--wrong) !important;
+      color: #7f1d1d;
+    }
+
+    .feedback {
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .feedback.correct {
+      background-color: #f0fdf4;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .feedback.wrong {
+      background-color: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="title-area">
+        <h1>بنك أسئلة الدرس 1-1: الحوسبة وتكنولوجيا المعلومات</h1>
+        <p>100 سؤال اختياري تفاعلي (سؤال عربي ويليه نفس السؤال بالإنجليزية للغات)</p>
+      </div>
+      <div class="score-board">
+        الدرجة: <span id="score">0</span> / <span id="answered">0</span>
+      </div>
+    </header>
+
+    <div class="controls">
+      <button class="btn btn-outline" onclick="filterQuestions('all')">عرض الكل (All 100)</button>
+      <button class="btn btn-outline" onclick="filterQuestions('ar')">العربي فقط (Arabic Only)</button>
+      <button class="btn btn-outline" onclick="filterQuestions('en')">اللغات فقط (English Only)</button>
+      <button class="btn btn-primary" onclick="resetQuiz()">إعادة تعيين (Reset Quiz)</button>
+    </div>
+
+    <div id="quiz-list"></div>
+  </div>
+
+  <script>
+    // 50 زوج أسئلة مطابق لكتاب الوزارة تماماً (إجمالي 100 سؤال معروض)
+    const rawPairs = [
+      {
+        ar: {
+          q: "ما هي التقنية التي اعتمدت عليها حواسيب الأربعينيات إلى الستينيات مثل حاسوب ENIAC؟",
+          opts: ["الصمامات المفرغة والترانزستورات الأولى", "المعالجات فائقة التوصيل", "الدوائر المتكاملة المصغرة جداً", "الحوسبة الكمومية"],
+          ans: 0,
+          exp: "اعتمدت الحواسيب الأولى على الصمامات المفرغة مسببة حجماً ضخماً واستهلاكاً كبيراً للطاقة."
+        },
+        en: {
+          q: "Which technology did early computers in the 1940s-1960s like ENIAC rely on?",
+          opts: ["Vacuum tubes and early transistors", "Superconducting processors", "Ultra-scale integrated circuits", "Quantum computing"],
+          ans: 0,
+          exp: "Early computers relied on vacuum tubes, resulting in huge physical size and heavy power draw."
+        }
+      },
+      {
+        ar: {
+          q: "في أي حقبة بدأت أجهزة الحاسوب الشخصية (PCs) بالدخول للمنازل والمكاتب الصغيرة؟",
+          opts: ["الأربعينيات إلى الخمسينيات", "السبعينيات إلى الثمانينيات", "العقد الثاني من الألفية", "التسعينيات فقط"],
+          ans: 1,
+          exp: "شهدت فترة السبعينيات والثمانينيات انطلاق الحواسيب الشخصية بفضل ابتكار المعالجات الدقيقة."
+        },
+        en: {
+          q: "During which era did personal computers (PCs) start entering homes and small offices?",
+          opts: ["1940s to 1950s", "1970s to 1980s", "2010s onwards", "1990s only"],
+          ans: 1,
+          exp: "The 1970s-1980s saw the emergence of PCs enabled by microprocessors."
+        }
+      },
+      {
+        ar: {
+          q: "الحدث التكنولوجي الأبرز في فترة التسعينيات والذي غير أسلوب تدفق المعلومات عالمياً هو:",
+          opts: ["ظهور الحوسبة الكمومية", "إتاحة الإنترنت تجارياً وظهور متصفحات الويب", "صناعة أول هاتف ذكي بشاشة لمس", "اختراع الصمامات المفرغة"],
+          ans: 1,
+          exp: "في التسعينيات أتيح الإنترنت للاستخدام العام والتجاري وظهرت الشبكة العنكبوتية والبريد الإلكتروني."
+        },
+        en: {
+          q: "The defining technological breakthrough in the 1990s that changed global communication was:",
+          opts: ["Introduction of quantum computing", "Commercial Internet access and web browsers", "The first capacitive touchscreen smartphone", "Invention of vacuum tubes"],
+          ans: 1,
+          exp: "Commercial internet access and the World Wide Web revolutionized information exchange in the 1990s."
+        }
+      },
+      {
+        ar: {
+          q: "ما الحقبة التي شهدت انتشار الهواتف الذكية وتوفير الوصول المتنقل الدائم للإنترنت؟",
+          opts: ["السبعينيات", "الثمانينيات", "العقد الأول من الألفية (2000s)", "الأربعينيات"],
+          ans: 2,
+          exp: "العقد الأول من الألفية تميز بظهور الهواتف الذكية مثل iPhone وشبكات المحمول عالية السرعة."
+        },
+        en: {
+          q: "Which decade witnessed the widespread adoption of smartphones and mobile internet?",
+          opts: ["1970s", "1980s", "First decade of the millennium (2000s)", "1940s"],
+          ans: 2,
+          exp: "The 2000s saw the smartphone explosion, enabling mobile connectivity anywhere."
+        }
+      },
+      {
+        ar: {
+          q: "تقديم موارد تكنولوجيا المعلومات (تخزين، خوادم، برمجيات) كخدمة عبر الإنترنت يسمى:",
+          opts: ["الحوسبة السحابية (Cloud Computing)", "الحوسبة الطرفية فقط", "الواقع الافتراضي", "التشفير المتماثل"],
+          ans: 0,
+          exp: "الحوسبة السحابية توفر الموارد التقنية حسب الطلب عبر شبكة الإنترنت."
+        },
+        en: {
+          q: "Delivering IT resources (storage, servers, software) as an on-demand service over the Internet is called:",
+          opts: ["Cloud Computing", "Edge Computing exclusively", "Virtual Reality", "Symmetric Encryption"],
+          ans: 0,
+          exp: "Cloud computing offers pooled computing infrastructure on demand."
+        }
+      },
+      {
+        ar: {
+          q: "ينص قانون مور (Moore's Law) على أن عدد الترانزستورات داخل الشريحة يتضاعف تقريباً كل:",
+          opts: ["6 أشهر", "عامين (سنتين)", "10 سنوات", "5 سنوات"],
+          ans: 1,
+          exp: "لاحظ جوردون مور أن عدد الترانزستورات يتضاعف كل عامين تقريباً."
+        },
+        en: {
+          q: "Moore's Law states that the number of transistors on a microchip doubles roughly every:",
+          opts: ["6 months", "2 years", "10 years", "5 years"],
+          ans: 1,
+          exp: "Gordon Moore observed that transistor counts double approximately every two years."
+        }
+      },
+      {
+        ar: {
+          q: "ما التحدي الفيزيائي الناتج عن زيادة صغر الترانزستور لدرجة تسرب الطاقة والحرارة أثناء إيقافه؟",
+          opts: ["تيارات التسرب (Leakage Currents)", "التراكب الكمي", "الواقع المعزز", "المعالجة المتوازية"],
+          ans: 0,
+          exp: "مع رقة العوازل تتسرب الشحنات الكهربائية مسببة فقداً للطاقة وحرارة عالية."
+        },
+        en: {
+          q: "Which physical challenge occurs when nanoscale transistors leak power and heat while switched off?",
+          opts: ["Leakage currents", "Quantum superposition", "Augmented reality", "Parallel processing"],
+          ans: 0,
+          exp: "Extremely thin dielectric gates cause electric current leakage."
+        }
+      },
+      {
+        ar: {
+          q: "الظاهرة الكمومية التي تجعل الإلكترونات تقفز عبر الحواجز العازلة الضيقة بالمعالج تسمى:",
+          opts: ["التداخل البصري", "النفق الكمومي (Quantum Tunneling)", "الحوسبة السحابية", "التشفير غير المتماثل"],
+          ans: 1,
+          exp: "النفق الكمومي يسمح للإلكترونات باختراق الحواجز المادية عند المقاييس الذرية."
+        },
+        en: {
+          q: "The quantum phenomenon where electrons tunnel through thin insulating barriers in chips is:",
+          opts: ["Optical interference", "Quantum Tunneling", "Cloud hosting", "Asymmetric cryptography"],
+          ans: 1,
+          exp: "Quantum tunneling prevents nanoscale silicon gates from shutting off cleanly."
+        }
+      },
+      {
+        ar: {
+          q: "للالتفاف على صعوبة زيادة تردد النواة الواحدة، اتجهت صناعة المعالجات الحديثة إلى:",
+          opts: ["تعدد الأنوية والمعالجة المتوازية", "الرجوع للصمامات المفرغة", "إلغاء المعالجات تماماً", "استخدام بطاريات أكبر فقط"],
+          ans: 0,
+          exp: "اعتمدت الصناعة على المعالجات متعددة الأنوية لتقسيم العمل بالتوازي بدلاً من رفع التردد الفردي."
+        },
+        en: {
+          q: "To overcome physical scaling limitations on single-core clock speeds, modern processor architecture shifted to:",
+          opts: ["Multi-core processors and parallel processing", "Reverting to vacuum tubes", "Eliminating silicon chips", "Larger batteries only"],
+          ans: 0,
+          exp: "Chipmakers adopted multi-core layouts and parallel computing."
+        }
+      },
+      {
+        ar: {
+          q: "معالجة البيانات محلياً على الجهاز نفسه لتقليل زمن التأخير وتجنب إرسالها للسحابة تسمى:",
+          opts: ["الحوسبة الطرفية (Edge Computing)", "الحوسبة المركزية", "الواقع الافتراضي", "التجارة الإلكترونية"],
+          ans: 0,
+          exp: "الحوسبة الطرفية تجري العمليات الحسابية على حافة الشبكة بالقرب من أجهزة الاستشعار."
+        },
+        en: {
+          q: "Processing sensor data locally on the device to minimize latency instead of relying on the cloud is:",
+          opts: ["Edge Computing", "Centralized computing", "Virtual Reality", "E-Commerce"],
+          ans: 0,
+          exp: "Edge computing performs processing close to the data source."
+        }
+      },
+      {
+        ar: {
+          q: "لماذا تفضل السيارات ذاتية القيادة الحوسبة الطرفية في قرارات التوقف الطارئ؟",
+          opts: ["لأنها أرخص فقط", "لتقليل زمن الاستجابة إلى أجزاء ضئيلة من الثانية تفادياً للحوادث", "لأنها لا تحتاج إلى كهرباء", "لكي تشغل ألعاب الفيديو للركاب"],
+          ans: 1,
+          exp: "الفرملة الطارئة تتطلب سرعة استجابة فائقة لا تحتمل بطء شبكات الإنترنت."
+        },
+        en: {
+          q: "Why do autonomous vehicles rely on edge computing for emergency braking?",
+          opts: ["It is cheaper only", "To achieve ultra-low latency within milliseconds to prevent collisions", "Because it requires zero electricity", "To stream passenger media"],
+          ans: 1,
+          exp: "Instant decisions cannot tolerate network latency or dropped signals."
+        }
+      },
+      {
+        ar: {
+          q: "تقنية تسقط عناصر ورسومات رقمية ومعلومات تفاعلية فوق مشهد العالم الواقعي الحقيقي هي:",
+          opts: ["الواقع الافتراضي (VR)", "الواقع المعزز (AR)", "الحوسبة الكمية", "التخزين السحابي"],
+          ans: 1,
+          exp: "الواقع المعزز يعرض طبقة بيانات فوق بيئة العالم الواقعي دون حجبها."
+        },
+        en: {
+          q: "A technology that superimposes 3D digital elements and data over the physical real world is:",
+          opts: ["Virtual Reality (VR)", "Augmented Reality (AR)", "Quantum Computing", "Cloud Storage"],
+          ans: 1,
+          exp: "AR overlays digital information seamlessly onto real surroundings."
+        }
+      },
+      {
+        ar: {
+          q: "تقنية تعزل المستخدم تماماً عن بيئته الحقيقية وتدخله في عالم رقمي مولد حاسوبياً 100% هي:",
+          opts: ["الواقع الافتراضي (VR)", "الواقع المعزز (AR)", "الحوسبة الطرفية", "البت التقليدي"],
+          ans: 0,
+          exp: "الواقع الافتراضي يحجب الرؤية الحقيقية بنظارة مغلقة ويعرض بيئة ثلاثية الأبعاد كاملة."
+        },
+        en: {
+          q: "A technology that completely isolates users from their physical environment into a simulated digital world is:",
+          opts: ["Virtual Reality (VR)", "Augmented Reality (AR)", "Edge Computing", "Classical Bit"],
+          ans: 0,
+          exp: "VR fully immerses users in an artificial 360-degree environment."
+        }
+      },
+      {
+        ar: {
+          q: "ما هي وحدة المعلومات الأساسية في الحوسبة التقليدية؟",
+          opts: ["الكيوبت (Qubit)", "البت (Bit)", "النانوميتر", "الترانزستور السحابي"],
+          ans: 1,
+          exp: "البت التقليدي هو أصغر وحدة ويحمل إما القيمة 0 أو 1."
+        },
+        en: {
+          q: "What is the fundamental unit of information in classical computing?",
+          opts: ["Qubit", "Bit", "Nanometer", "Cloud transistor"],
+          ans: 1,
+          exp: "A classical bit is strictly binary: either 0 or 1."
+        }
+      },
+      {
+        ar: {
+          q: "ما هي وحدة المعلومات الأساسية في الحوسبة الكمومية؟",
+          opts: ["البت (Bit)", "البايت (Byte)", "الكيوبت (Qubit)", "الترانزستور"],
+          ans: 2,
+          exp: "الكيوبت هو الوحدة الكمومية المعتمدة على حالات فيزياء الكم."
+        },
+        en: {
+          q: "What is the primary unit of quantum information?",
+          opts: ["Bit", "Byte", "Qubit", "Transistor"],
+          ans: 2,
+          exp: "A qubit is the basic unit utilized in quantum systems."
+        }
+      },
+      {
+        ar: {
+          q: "تسمى قدرة الكيوبت على تمثيل خليط احتمالي من حالتي 0 و1 معاً في نفس الوقت بـ:",
+          opts: ["التراكب الكمومي (Superposition)", "النفق الكمومي", "التسرب الكهربائي", "الانعكاس الافتراضي"],
+          ans: 0,
+          exp: "التراكب الكمومي يسمح بتواجد الكيوبت في توليفة احتمالية من الحالتين بالتزامن."
+        },
+        en: {
+          q: "The ability of a qubit to exist in a continuous combination of both 0 and 1 simultaneously is called:",
+          opts: ["Quantum Superposition", "Quantum Tunneling", "Electrical Leakage", "Virtual Reflection"],
+          ans: 0,
+          exp: "Superposition allows simultaneous probabilistic representation."
+        }
+      },
+      {
+        ar: {
+          q: "التمثيل الهندسي الرياضي الذي يستخدم كرة لعرض حالة الكيوبت وتراكبه يسمى:",
+          opts: ["كرة نيوتن", "كرة بلوخ (Bloch Sphere)", "مكعب تورينج", "دائرة إينياك"],
+          ans: 1,
+          exp: "كرة بلوخ هي النموذج الهندسي ثلاثي الأبعاد لحالة الكيوبت الكمومي."
+        },
+        en: {
+          q: "The geometric sphere representation used to map the state of a single qubit is known as the:",
+          opts: ["Newton sphere", "Bloch Sphere", "Turing cube", "ENIAC circle"],
+          ans: 1,
+          exp: "The Bloch sphere visualizes state vectors in quantum mechanics."
+        }
+      },
+      {
+        ar: {
+          q: "هل الحوسبة الكمومية بديل عام وشامل سيلغي جميع الحواسيب التقليدية في منازلنا؟",
+          opts: ["نعم، ستلغي كل الحواسيب خلال عامين", "لا، هي نهج مختلف مخصص لمسائل معقدة محددة", "نعم، لأنها أرخص بكثير", "نعم، وتعمل بدون طاقة تماماً"],
+          ans: 1,
+          exp: "الحوسبة الكمومية ليست بديلاً عاماً وإنما أداة لحل فئات رياضية وعلمية بالغة التعقيد."
+        },
+        en: {
+          q: "Is quantum computing a universal replacement that will obsolete all personal computers?",
+          opts: ["Yes, replacing all PCs in two years", "No, it is a specialized approach for specific complex problems", "Yes, because it is much cheaper", "Yes, and it runs without power"],
+          ans: 1,
+          exp: "Quantum systems are dedicated solvers for distinct mathematical problems."
+        }
+      },
+      {
+        ar: {
+          q: "أي مما يلي يُعد من ركائز التحول الاجتماعي الخمسة الناتجة عن تكنولوجيا المعلومات؟",
+          opts: ["التجارة الإلكترونية والدفع غير النقدي", "العودة للمعاملات الورقية", "إلغاء التعليم بالكامل", "حظر شبكات الاتصال"],
+          ans: 0,
+          exp: "التجارة الإلكترونية والمدفوعات غير النقدية تمثلان ركائز أساسية للتحول الاجتماعي المعاصر."
+        },
+        en: {
+          q: "Which of the following is one of the five major social transformations driven by IT?",
+          opts: ["E-Commerce and Cashless Payments", "Reverting to paper accounting", "Abolishing formal education", "Banning wireless networks"],
+          ans: 0,
+          exp: "E-Commerce and digital payments are central societal shifts."
+        }
+      },
+      {
+        ar: {
+          q: "بيع وشراء المنتجات والخدمات عبر المتاجر الرقمية واستلامها في المنازل يمثل:",
+          opts: ["العمل عن بعد", "التجارة الإلكترونية (E-Commerce)", "الحوسبة الطرفية", "التراكب الكمي"],
+          ans: 1,
+          exp: "التجارة الإلكترونية هي تبادل السلع والخدمات وسداد قيمتها عبر منصات الإنترنت."
+        },
+        en: {
+          q: "Buying and selling goods or services online with home delivery represents:",
+          opts: ["Remote work", "E-Commerce", "Edge Computing", "Quantum superposition"],
+          ans: 1,
+          exp: "E-Commerce conducts commercial transactions over the internet."
+        }
+      },
+      {
+        ar: {
+          q: "أداء الموظف لمهامه الوظيفية وعقد الاجتماعات مع زملائه من منزله عبر الإنترنت يُعرف بـ:",
+          opts: ["العمل عن بعد (Remote Work)", "الحوسبة الكمية", "التصنيع الميكانيكي", "النفق الكمومي"],
+          ans: 0,
+          exp: "العمل عن بعد يعتمد على تقنيات السحابة والتواصل الرقمي لإنجاز الوظائف."
+        },
+        en: {
+          q: "Executing professional duties and team meetings from home using internet platforms is:",
+          opts: ["Remote Work", "Quantum Computing", "Mechanical Fabrication", "Quantum Tunneling"],
+          ans: 0,
+          exp: "Remote work relies on digital cloud communication across geographical barriers."
+        }
+      },
+      {
+        ar: {
+          q: "استخدام منصات الفصول الافتراضية وحل الواجبات عبر بنوك الأسئلة الرقمية يندرج تحت:",
+          opts: ["التعلم عبر الإنترنت (Online Learning)", "التجارة التقليدية", "الحوسبة الطرفية", "النظام الثنائي"],
+          ans: 0,
+          exp: "التعلم عبر الإنترنت يتيح مرونة الوصول للمناهج والتقييمات الذاتية عن بعد."
+        },
+        en: {
+          q: "Utilizing virtual classrooms and online question banks for assessment represents:",
+          opts: ["Online Learning", "Conventional trade", "Edge Computing", "Binary system"],
+          ans: 0,
+          exp: "Online learning delivers dynamic digital educational experiences."
+        }
+      },
+      {
+        ar: {
+          q: "استخدام تطبيقات الهواتف الذكية ومسح رموز QR لسداد ثمن المشتريات يسمى:",
+          opts: ["الدفع غير النقدي (Cashless Payment)", "المعالجة المتوازية", "التشفير غير المتماثل", "الواقع الافتراضي"],
+          ans: 0,
+          exp: "الدفع غير النقدي يستبدل العملات الورقية بالتحويلات الرقمية السريعة."
+        },
+        en: {
+          q: "Using smartphone apps and QR codes to settle retail purchases is referred to as:",
+          opts: ["Cashless Payment", "Parallel processing", "Asymmetric encryption", "Virtual reality"],
+          ans: 0,
+          exp: "Cashless payments handle financial transactions via digital channels."
+        }
+      },
+      {
+        ar: {
+          q: "ما التحدي الاجتماعي الذي يواجه كبار السن عند تحول مجتمع بالكامل إلى الدفع الإلكتروني؟",
+          opts: ["الفجوة الرقمية وصعوبة التعامل مع التطبيقات", "السرعة الفائقة للمعاملات", "انخفاض تكلفة السلع", "تعدد الأنوية في الهواتف"],
+          ans: 0,
+          exp: "الفجوة الرقمية تظهر عندما تعاني فئات مجتمعية من صعوبة التكيف مع التكنولوجيا."
+        },
+        en: {
+          q: "Which societal challenge do non-tech-savvy elderly citizens face during full digital cash transition?",
+          opts: ["The Digital Divide and usability barriers", "Transactions occurring too quickly", "Goods becoming too cheap", "Multi-core phone processors"],
+          ans: 0,
+          exp: "The digital divide creates accessibility obstacles for elderly demographics."
+        }
+      },
+      {
+        ar: {
+          q: "ما وظيفة الترانزستور الأساسية في الدوائر المنطقية للحواسيب الرقمية؟",
+          opts: ["مفتاح إلكتروني ثنائي (يفتح 1 أو يغلق 0)", "توليد الهواء البارد داخل الكيسة", "تخزين أقراص الفيديو فقط", "طباعة الأوراق الملونة"],
+          ans: 0,
+          exp: "يعمل الترانزستور كمفتاح كهربائي يتحكم في تدفق التيار لتمثيل 0 و1."
+        },
+        en: {
+          q: "What is the primary role of a transistor in digital logic computer circuits?",
+          opts: ["Binary electronic switch (conducting 1 or blocking 0)", "Cooling ambient air", "Permanent video disc storage", "Color paper printing"],
+          ans: 0,
+          exp: "Transistors function as high-speed switches representing 0 and 1."
+        }
+      },
+      {
+        ar: {
+          q: "الحواسيب المبنية على الصمامات المفرغة كانت تعاني بشكل رئيسي من:",
+          opts: ["الحجم الضخم وانبعاث حرارة هائلة واحتراق الصمامات", "السرعة الزائدة جداً التي تتلف الشاشات", "عدم حاجتها للكهرباء", "صغر حجمها وصعوبة رؤيتها"],
+          ans: 0,
+          exp: "الصمامات المفرغة تستهلك طاقة كبيرة وتولد حرارة شديدة وتتعطل باستمرار."
+        },
+        en: {
+          q: "Vacuum-tube-based computers suffered mainly from:",
+          opts: ["Enormous size, massive heat generation, and frequent tube burnout", "Excessive speed destroying monitors", "Zero electrical power demand", "Being too tiny to see"],
+          ans: 0,
+          exp: "Thermionic tubes were bulky, power-hungry, and prone to regular failure."
+        }
+      },
+      {
+        ar: {
+          q: "أي مما يلي يُعد ميزة أساسية للحوسبة السحابية للمؤسسات التعليمية؟",
+          opts: ["إمكانية الوصول للملفات والمناهج المشتركة من أي جهاز", "إلغاء الحاجة لوجود كهرباء بالمدارس", "منع الطلاب من استخدام الإنترنت", "حفظ البيانات على ورق مقوى"],
+          ans: 0,
+          exp: "السحابة تتيح مشاركة الموارد والوصول المتزامن للملفات من أي مكان."
+        },
+        en: {
+          q: "Which of the following is a primary benefit of cloud computing for educational institutions?",
+          opts: ["Accessing shared curriculum assets from any connected device", "Eliminating electrical requirements in schools", "Preventing internet connectivity", "Storing assignments on physical cardstock"],
+          ans: 0,
+          exp: "Cloud storage centralizes assets for instant access anywhere."
+        }
+      },
+      {
+        ar: {
+          q: "عندما ينهار الكيوبت الكمي لحظة القياس والملاحظة (Measurement)، فإنه:",
+          opts: ["يتحول إلى قيمة ثنائية كلاسيكية محددة (إما 0 أو 1)", "يختفي من الوجود نهائياً", "يتحول إلى سحابة بخار", "يصبح رقماً لا نهائياً"],
+          ans: 0,
+          exp: "عملية القياس تجبر الدالة الموجية على الانهيار لحالة كلاسيكية حتمية (0 أو 1)."
+        },
+        en: {
+          q: "When a quantum qubit is measured, its superposition wave collapses into:",
+          opts: ["A single deterministic classical value (either 0 or 1)", "Vanishing from physical reality entirely", "A cloud of vapor", "An infinite number"],
+          ans: 0,
+          exp: "Measurement forces quantum states to collapse into definite classical outputs."
+        }
+      },
+      {
+        ar: {
+          q: "ما المصطلح الذي يصف معالجة عدة تعليمات برمجية في نفس اللحظة عبر أنوية مستقلة؟",
+          opts: ["المعالجة المتوازية (Parallel Processing)", "المعالجة التسلسلية البطيئة", "الحوسبة الميكانيكية", "التبديل الورقي"],
+          ans: 0,
+          exp: "المعالجة المتوازية توزع الأعباء الحسابية على عدة مسارات لتنجز في الوقت نفسه."
+        },
+        en: {
+          q: "Which term describes executing multiple computational instructions concurrently across cores?",
+          opts: ["Parallel Processing", "Slow sequential processing", "Mechanical computing", "Paper toggling"],
+          ans: 0,
+          exp: "Parallelism divides workloads across simultaneous processor channels."
+        }
+      },
+      {
+        ar: {
+          q: "فلاتر تطبيق الكاميرا التي تضع قناعاً ثلاثي الأبعاد على وجه المستخدم الحقيقي تُعد مثالاً على:",
+          opts: ["الواقع المعزز (AR)", "الواقع الافتراضي (VR)", "الحوسبة الكمومية", "البت الثنائي الصلب"],
+          ans: 0,
+          exp: "الفلاتر تُسقط رسومات رقمية فوق صورة الوجه الحقيقي مباشرة عبر الكاميرا."
+        },
+        en: {
+          q: "Camera filters that place a responsive 3D mask onto a person's live face are an example of:",
+          opts: ["Augmented Reality (AR)", "Virtual Reality (VR)", "Quantum Computing", "Rigid Binary Bit"],
+          ans: 0,
+          exp: "AR blends virtual objects seamlessly over the real camera feed."
+        }
+      },
+      {
+        ar: {
+          q: "استخدام نظارة معتمة تماماً للتدرب على محاكاة إخماد حرائق داخل مبنى افتراضي بالكامل يُعد تطبيقاً على:",
+          opts: ["الواقع الافتراضي (VR)", "الواقع المعزز (AR)", "قانون مور", "الحوسبة الطرفية"],
+          ans: 0,
+          exp: "المحاكاة الكاملة مع حجب البيئة الحقيقية تمثل بيئة واقع افتراضي تفاعلية."
+        },
+        en: {
+          q: "Wearing an opaque headset to simulate firefighting operations in an artificial building is an example of:",
+          opts: ["Virtual Reality (VR)", "Augmented Reality (AR)", "Moore's Law", "Edge Computing"],
+          ans: 0,
+          exp: "VR fully replaces real surroundings with an immersive simulation."
+        }
+      },
+      {
+        ar: {
+          q: "البت التقليدي (Classical Bit) يمكن تشبيهه فيزيائياً بـ:",
+          opts: ["مفتاح مصباح كهربائي عادي (إما مطفأ أو مضاء)", "كرة تدور في كل الاتجاهات باستمرار", "مروحة تدور بسرعة الضوء", "سحابة ضباب متغيرة"],
+          ans: 0,
+          exp: "البت العادي حتمي ذو حالتين ثابتتين كالمفتاح الميكانيكي تماماً."
+        },
+        en: {
+          q: "A classical bit can be physically analogized to:",
+          opts: ["A standard light switch (strictly OFF or ON)", "A sphere spinning continuously in all directions", "A fan running at light speed", "A shapeshifting mist cloud"],
+          ans: 0,
+          exp: "Classical bits operate identically to two-state toggle switches."
+        }
+      },
+      {
+        ar: {
+          q: "أي مما يلي يُعد من أهم دوافع ابتكار الحوسبة الطرفية؟",
+          opts: ["تقليل زمن انتقال البيانات (Latency) وتوفير استهلاك النطاق الترددي", "زيادة تكلفة الأجهزة بالشركات", "إلغاء استخدام لغات البرمجة", "إجبار المستخدم على البقاء بالمنزل"],
+          ans: 0,
+          exp: "الحوسبة الطرفية تهدف لتفادي بطء نقل البيانات عبر الإنترنت وتخفيف الضغط على الشبكة."
+        },
+        en: {
+          q: "Which of the following is a primary driver for deploying Edge Computing?",
+          opts: ["Minimizing network latency and reducing bandwidth consumption", "Increasing hardware expenses for enterprises", "Eliminating software programming languages", "Forcing employees to stay home"],
+          ans: 0,
+          exp: "Edge computing slashes latency by keeping computation proximal."
+        }
+      },
+      {
+        ar: {
+          q: "ما الميزة الاقتصادية التي قدمتها الحوسبة السحابية للشركات الناشئة؟",
+          opts: ["التحول من شراء خوادم باهظة إلى نموذج الدفع حسب الاستهلاك", "منع الموظفين من التواصل الرقمي", "إلغاء الحاجة لمهندسي البرمجيات", "إلغاء المعاملات البنكية"],
+          ans: 0,
+          exp: "السحابة خفضت تكاليف البنية التحتية بالاعتماد على استئجار السيرفرات عند الطلب."
+        },
+        en: {
+          q: "What economic advantage did Cloud Computing offer modern technology startups?",
+          opts: ["Shifting from costly capital hardware to an operational pay-as-you-go model", "Preventing digital communications", "Eliminating the need for software engineers", "Abolishing corporate banking"],
+          ans: 0,
+          exp: "Cloud transforms heavy upfront capital expenses into flexible operational costs."
+        }
+      },
+      {
+        ar: {
+          q: "أحد أهم أسباب فشل زيادة سرعة المعالجات الفردية وصغرها اللانهائي هو:",
+          opts: ["الحرارة المفرطة وتأثيرات ميكانيكا الكم كالأنفاق الكمومية", "انتهاء مادة الحديد من كوكب الأرض", "عدم رغبة المستخدمين في أجهزة سريعة", "إيقاف تصنيع الكهرباء"],
+          ans: 0,
+          exp: "الحواجز الذرية تؤدي لارتفاع الحرارة وتأثيرات كمومية تفسد العمل المنطقي للترانزستور."
+        },
+        en: {
+          q: "A primary obstacle terminating relentless single-core miniaturization is:",
+          opts: ["Excessive thermal throttling and quantum effects like tunneling", "Global depletion of iron reserves", "Lack of consumer demand for faster hardware", "Ceasing electrical power generation"],
+          ans: 0,
+          exp: "Nanoscale gate leakage causes severe thermal constraints and quantum noise."
+        }
+      },
+      {
+        ar: {
+          q: "تعتمد الحواسيب الحديثة على وحدات متخصصة لمعالجة الرسوميات والذكاء الاصطناعي تُعرف بـ:",
+          opts: ["GPUs و NPUs", "الصمامات المفرغة القديمة", "الأسلاك اليدوية النحاسية", "الطباعة الميكانيكية"],
+          ans: 0,
+          exp: "الـ GPUs والـ NPUs هي شرائح مصممة خصيصاً للتعامل مع العمليات المتوازية والذكاء الاصطناعي."
+        },
+        en: {
+          q: "Modern computing architectures rely on dedicated coprocessors for graphics and AI known as:",
+          opts: ["GPUs and NPUs", "Legacy vacuum tubes", "Manual jumper wiring", "Mechanical typewriters"],
+          ans: 0,
+          exp: "GPUs and NPUs accelerate specialized parallel math and neural workloads."
+        }
+      },
+      {
+        ar: {
+          q: "أي المجالات الآتية يُتوقع أن تقدم فيه الحوسبة الكمومية تفوقاً حاسماً؟",
+          opts: ["محاكاة التفاعلات الدوائية والجزيئات المعقدة وكسر التشفير", "تصفح البريد الإلكتروني اليومي", "كتابة المقالات على برامج النصوص", "تشغيل الموسيقى في الهاتف"],
+          ans: 0,
+          exp: "الحوسبة الكمية تتفوق في المسائل الرياضية التوافقية ومحاكاة الكيمياء الكمية."
+        },
+        en: {
+          q: "In which problem domains is Quantum Computing expected to offer quantum supremacy?",
+          opts: ["Molecular drug simulation, quantum chemistry, and cryptography breaking", "Reading daily emails", "Word processing and essay writing", "Playing mobile audio tracks"],
+          ans: 0,
+          exp: "Quantum systems excel at simulating molecular structures and complex factorizations."
+        }
+      },
+      {
+        ar: {
+          q: "ما الخطر المحتمل لانتشار التجارة الإلكترونية على المجتمعات المحلية غير المنتبهة للأمان؟",
+          opts: ["احتيال سرقة البيانات والبطاقات وضعف الخصوصية", "سرعة وصول البضائع إلى البيت", "توفير وقت المواصلات للمشترين", "تنوع المنتجات المتاحة"],
+          ans: 0,
+          exp: "ضعف الوعي الرقمي قد يعرض المتعاملين لمخاطر النصب والتصيد الإلكتروني."
+        },
+        en: {
+          q: "What security risk accompanies the rapid adoption of e-commerce in uninformed user groups?",
+          opts: ["Financial credential theft, phishing scams, and privacy breaches", "Rapid delivery of packages", "Commuting time savings for buyers", "Wider product selection"],
+          ans: 0,
+          exp: "Digital transactions create attack vectors like credential phishing and identity fraud."
+        }
+      },
+      {
+        ar: {
+          q: "تطبيق يعرض خطوط مسار القيادة على الزجاج الأمامي للسيارة ليرى السائق الشارع والمسار معاً يمثل:",
+          opts: ["الواقع المعزز (AR)", "الواقع الافتراضي (VR)", "الحوسبة السحابية", "التشفير الكمي"],
+          ans: 0,
+          exp: "عرض المعلومات التفاعلية فوق الزجاج الشفاف يُعد تطبيقاً مباشراً للواقع المعزز."
+        },
+        en: {
+          q: "A heads-up windshield display projecting navigation paths over actual road asphalt utilizes:",
+          opts: ["Augmented Reality (AR)", "Virtual Reality (VR)", "Cloud Computing", "Quantum Encryption"],
+          ans: 0,
+          exp: "Projecting contextual directions onto physical roads is core AR utility."
+        }
+      },
+      {
+        ar: {
+          q: "في كرة بلوخ (Bloch Sphere)، تمثل نقطتا القطب الشمالي والجنوبي:",
+          opts: ["الحالتين الأساسيتين 0 و 1", "درجة الحرارة العظمى والصغرى", "سرعة الترانزستور", "حجم بطارية الحاسوب"],
+          ans: 0,
+          exp: "يمثل القطبان الحالة النقية 0 والحالة النقية 1 على المحور الرأسي للكرة."
+        },
+        en: {
+          q: "On a Bloch Sphere, the north and south geographic poles represent:",
+          opts: ["The pure basis states |0⟩ and |1⟩", "Maximum and minimum temperatures", "Clock speed of a transistor", "Battery capacity levels"],
+          ans: 0,
+          exp: "The vertical antipodal poles correspond to the computational basis states |0⟩ and |1⟩."
+        }
+      },
+      {
+        ar: {
+          q: "ما الميزة الكبرى للمعالجة المتوازية مقارنة بالمعالجة التسلسلية التقليدية؟",
+          opts: ["تنفيذ أجزاء المشكلة الحسابية في الوقت نفسه لتوفير الوقت", "الاعتماد على مفتاح ميكانيكي واحد فقط", "إيقاف الشاشة لتوفير البطارية", "تقليل سعة التخزين"],
+          ans: 0,
+          exp: "المعالجة المتوازية تختصر زمن الحسابات بتشغيل مسارات عمل متعددة في آن واحد."
+        },
+        en: {
+          q: "What is the primary advantage of parallel execution over traditional serial execution?",
+          opts: ["Solving computational subtasks concurrently to save time", "Relying on a single mechanical toggle switch", "Shutting down monitors to save power", "Lowering storage capacity"],
+          ans: 0,
+          exp: "Parallelism divides computing workloads across concurrent execution pipelines."
+        }
+      },
+      {
+        ar: {
+          q: "توفير منصات الدفع الإلكتروني بالمحلات التجارية الصغيرة يساعد أصحاب المتاجر في:",
+          opts: ["تقليل مخاطر سرقة النقد الورقي وتسهيل مبيعات الزبائن", "إيقاف بيع السلع تماماً", "إلغاء استخدام الهواتف المحمولة", "زيادة تكدس الطوابير"],
+          ans: 0,
+          exp: "المدفوعات الإلكترونية تقلل أعباء حمل النقدية وتفادي أخطاء الحسابات والمبيعات."
+        },
+        en: {
+          q: "Providing cashless checkout terminals in local convenience retail helps store owners by:",
+          opts: ["Reducing physical cash theft risk and accelerating checkout flow", "Ceasing product sales", "Banning mobile phones entirely", "Lengthening customer queues"],
+          ans: 0,
+          exp: "Digital payments minimize cash shrinkage and expedite register throughput."
+        }
+      },
+      {
+        ar: {
+          q: "أي أجهزة الإدخال التالية كان يستخدم لإدخال الأوامر يدوياً في حواسيب أربعينيات القرن الماضي؟",
+          opts: ["لوحات التوصيل اليدوية والمفاتيح والكروت المثقبة", "شاشات اللمس الحساسة", "الفأرة اللاسلكية", "نظارات الواقع المعزز"],
+          ans: 0,
+          exp: "كانت الحواسيب الأولى تبرمج يدوياً بأسلاك توصيل وكروت مثقبة دون لوحة مفاتيح حديثة."
+        },
+        en: {
+          q: "Which interface was historically used to program 1940s mainframe computers like ENIAC?",
+          opts: ["Manual patch cables, toggles, and punched cards", "Capacitive touchscreens", "Wireless optical mice", "Augmented reality headsets"],
+          ans: 0,
+          exp: "Early operators manually wired plugboards and fed punched cards."
+        }
+      },
+      {
+        ar: {
+          q: "تُعرف قدرة النظام الحاسوبي على تلبية زيادة مفاجئة في أعداد المستخدمين عبر السحابة بـ:",
+          opts: ["قابلية التوسع المرن (Scalability)", "النفق الكمومي", "البت الثنائي", "الفجوة الاجتماعية"],
+          ans: 0,
+          exp: "السحابة تسمح بزيادة الموارد والخوادم تلقائياً عند زيادة ضغط المستخدمين."
+        },
+        en: {
+          q: "The capability of cloud systems to seamlessly adapt to surges in user workload is called:",
+          opts: ["Elastic Scalability", "Quantum Tunneling", "Binary Bit", "Social Divide"],
+          ans: 0,
+          exp: "Cloud scalability dynamically provisions resources based on traffic demands."
+        }
+      },
+      {
+        ar: {
+          q: "إذا انقطع اتصال الإنترنت فجأة عن سيارة تعتمد بالكامل على السحابة، فإن النتيجة الحتمية هي:",
+          opts: ["فقدان القدرة على تحليل العوائق واتخاذ قرارات القيادة الفورية", "زيادة سرعة السيارة تلقائياً", "تحول شاشتها إلى واقع افتراضي", "مضاعفة سعة بطاريتها"],
+          ans: 0,
+          exp: "الاعتماد السحابي الكامل يجعل النظام عاجزاً عند انقطاع الاتصال الشبكي."
+        },
+        en: {
+          q: "If network connectivity drops completely on a purely cloud-dependent autonomous vehicle, it will:",
+          opts: ["Fail to analyze sensor hazards and execute real-time driving decisions", "Accelerate automatically", "Switch its windshield into VR", "Double its battery capacity"],
+          ans: 0,
+          exp: "A pure-cloud design experiences fatal outages when disconnected from external networks."
+        }
+      },
+      {
+        ar: {
+          q: "أي مما يلي يعبر بدقة عن مفهوم 'العمل عن بعد' وفق المنهج؟",
+          opts: ["استخدام التكنولوجيا السحابية لأداء مهام الوظيفة دون التقيد بمقر العمل الجغرافي", "عدم القيام بأي عمل وترك الحاسوب يعمل بمفرده", "الذهاب سيراً على الأقدام لمقر الشركة يومياً", "طباعة الملفات على آلات كاتبة قديمة"],
+          ans: 0,
+          exp: "العمل عن بعد يتيح أداء المهام بالكامل عبر الإنترنت والأدوات السحابية من أي مكان."
+        },
+        en: {
+          q: "Which definition accurately describes 'Remote Work' according to the curriculum?",
+          opts: ["Leveraging cloud technology to execute job duties irrespective of physical location", "Leaving computers idle without completing tasks", "Walking daily to corporate headquarters", "Using mechanical typewriters to draft paper documents"],
+          ans: 0,
+          exp: "Remote work untethers productivity from centralized physical offices."
+        }
+      },
+      {
+        ar: {
+          q: "التجارة الإلكترونية ساعدت أصحاب المشروعات اليدوية والمنزلية الصغيرة في:",
+          opts: ["الوصول لزبائن في مختلف المحافظات دون تكلفة استئجار محل تجاري باهظ", "منع استخدام الشحن والتوصيل", "حظر الدفع الإلكتروني", "إلغاء تصنيع المنتجات"],
+          ans: 0,
+          exp: "التجارة الإلكترونية فتحت آفاق التسويق الواسع بتكاليف تشغيل منخفضة للأسر المنتجة."
+        },
+        en: {
+          q: "E-Commerce empowered domestic home-based craft businesses by:",
+          opts: ["Reaching nationwide customers without renting costly physical storefronts", "Banning shipping couriers", "Prohibiting digital payments", "Ceasing production lines"],
+          ans: 0,
+          exp: "Digital marketplaces democratized distribution for small-scale creators."
+        }
+      },
+      {
+        ar: {
+          q: "إذا كانت حالة البت العادي تمثل إما 0 أو 1، فإن حالة الكيوبت تمثل:",
+          opts: ["تركيبة خطية احتمالية تجمع بين 0 و 1 معاً", "3 و 4 دائماً", "لا شيء على الإطلاق", "حرفاً أبجدياً غير رقمي"],
+          ans: 0,
+          exp: "الكيوبت يتواجد في حالة تراكب تمثل طيفاً احتمالياً للحالتين معاً."
+        },
+        en: {
+          q: "While a classical bit represents either 0 or 1, a quantum qubit represents:",
+          opts: ["A linear probabilistic superposition combining both 0 and 1", "Strictly digits 3 and 4", "Nothing whatsoever", "An arbitrary non-numeric letter"],
+          ans: 0,
+          exp: "A qubit exists in a probabilistic continuum between basic eigenstates."
+        }
+      },
+      {
+        ar: {
+          q: "ما الدور التوعوي الذي يجب توفيره للمواطنين عند تعميم بوابات الخدمات الحكومية الإلكترونية؟",
+          opts: ["محو الأمية الرقمية وشرح خطوات الاستخدام الآمن وحماية كلمات المرور", "إجبار المواطنين على عدم الشراء", "إلغاء خدمات الإنترنت بالمنازل", "منع كبار السن من الحصول على حقوقهم"],
+          ans: 0,
+          exp: "نشر الثقافة والأمان الرقمي ضروري لضمان استفادة المجتمع وتجنب الوقوع في الاحتيال."
+        },
+        en: {
+          q: "What awareness initiative must accompany nationwide launches of government e-portals?",
+          opts: ["Promoting digital literacy, safe credential hygiene, and fraud awareness", "Forcing citizens to stop purchasing goods", "Cutting home internet connectivity", "Depriving older adults of municipal rights"],
+          ans: 0,
+          exp: "Digital education bridges societal gaps and protects against social engineering scams."
+        }
+      },
+      {
+        ar: {
+          q: "الخلاصة المعمارية لمستقبل تطور الحواسيب بعد حدود قانون مور هي:",
+          opts: ["تكامل المعالجة المتوازية والشرائح المتخصصة والحوسبة السحابية والكمومية معاً", "التوقف التام عن تصنيع أي برمجيات جديدة", "العودة لحواسيب الأربعينيات", "الاعتماد فقط على تخزين الأوراق"],
+          ans: 0,
+          exp: "المستقبل يعتمد على مزيج متكامل من تعدد الأنوية، والشرائح التخصصية (AI chips)، والحلول الهجينة."
+        },
+        en: {
+          q: "The architectural consensus for advancing computing beyond classical scaling boundaries is:",
+          opts: ["Synergizing parallel multi-cores, specialized hardware accelerators, edge, cloud, and quantum computing", "Halting all software engineering progress", "Reverting to 1940s room mainframes", "Relying exclusively on physical paper archives"],
+          ans: 0,
+          exp: "Post-Moore scaling relies on specialized silicon accelerators and heterogenous hybrid computing."
+        }
+      }
+    ];
+
+    // تسطيح الأزواج لتصبح قائمة متتالية من 100 بطاقة سؤال (كل سؤال عربي يليه نفس السؤال بالإنجليزية)
+    let allQuestions = [];
+    rawPairs.forEach((pair, index) => {
+      // السؤال العربي
+      allQuestions.push({
+        id: `q-${index + 1}-ar`,
+        pairNum: index + 1,
+        lang: 'ar',
+        badge: `سؤال ${index + 1} (عربي)`,
+        text: pair.ar.q,
+        options: pair.ar.opts,
+        correct: pair.ar.ans,
+        explanation: pair.ar.exp
+      });
+      // نفس السؤال بالإنجليزية لطلاب اللغات
+      allQuestions.push({
+        id: `q-${index + 1}-en`,
+        pairNum: index + 1,
+        lang: 'en',
+        badge: `Question ${index + 1} (English / Languages)`,
+        text: pair.en.q,
+        options: pair.en.opts,
+        correct: pair.en.ans,
+        explanation: pair.en.exp
+      });
+    });
+
+    let score = 0;
+    let answeredCount = 0;
+    const answeredMap = new Set();
+
+    function renderQuestions(filter = 'all') {
+      const quizList = document.getElementById('quiz-list');
+      quizList.innerHTML = '';
+
+      allQuestions.forEach((q, idx) => {
+        if (filter !== 'all' && q.lang !== filter) return;
+
+        const card = document.createElement('div');
+        card.className = `question-card ${q.lang === 'ar' ? 'ar-card' : 'en-card'}`;
+        card.id = `card-${q.id}`;
+
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'card-header';
+        headerDiv.innerHTML = `
+          <span class="badge ${q.lang === 'ar' ? 'badge-ar' : 'badge-en'}">${q.badge}</span>
+          <small style="color: var(--text-muted); font-weight: 600;">#${idx + 1} / 100</small>
+        `;
+
+        const title = document.createElement('div');
+        title.className = 'q-text';
+        title.textContent = q.text;
+
+        const optionsGrid = document.createElement('div');
+        optionsGrid.className = 'options-grid';
+
+        q.options.forEach((optText, optIdx) => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          btn.textContent = optText;
+          btn.onclick = () => handleSelect(q.id, optIdx, q.correct, q.explanation, q.lang);
+          optionsGrid.appendChild(btn);
+        });
+
+        const feedback = document.createElement('div');
+        feedback.className = 'feedback';
+        feedback.id = `feedback-${q.id}`;
+
+        card.appendChild(headerDiv);
+        card.appendChild(title);
+        card.appendChild(optionsGrid);
+        card.appendChild(feedback);
+        quizList.appendChild(card);
+      });
+    }
+
+    function handleSelect(qId, selectedIdx, correctIdx, expText, lang) {
+      if (answeredMap.has(qId)) return;
+      answeredMap.add(qId);
+      answeredCount++;
+
+      const card = document.getElementById(`card-${qId}`);
+      const buttons = card.querySelectorAll('.option-btn');
+      const feedback = document.getElementById(`feedback-${qId}`);
+
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === correctIdx) {
+          btn.classList.add('correct');
+        }
+        if (idx === selectedIdx && selectedIdx !== correctIdx) {
+          btn.classList.add('wrong');
+        }
+      });
+
+      feedback.classList.add('show');
+      if (selectedIdx === correctIdx) {
+        score++;
+        feedback.classList.add('correct');
+        feedback.innerHTML = lang === 'ar' 
+          ? `<strong>إجابة صحيحة ممتازة!</strong> ${expText}` 
+          : `<strong>Correct Answer!</strong> ${expText}`;
+      } else {
+        feedback.classList.add('wrong');
+        feedback.innerHTML = lang === 'ar' 
+          ? `<strong>إجابة غير دقيقة.</strong> الإجابة الصحيحة هي الخيار المميز بالأخضر. ${expText}` 
+          : `<strong>Incorrect.</strong> The correct answer is highlighted in green. ${expText}`;
+      }
+
+      document.getElementById('score').textContent = score;
+      document.getElementById('answered').textContent = answeredCount;
+    }
+
+    function filterQuestions(lang) {
+      renderQuestions(lang);
+    }
+
+    function resetQuiz() {
+      score = 0;
+      answeredCount = 0;
+      answeredMap.clear();
+      document.getElementById('score').textContent = '0';
+      document.getElementById('answered').textContent = '0';
+      renderQuestions('all');
+    }
+
+    // التشغيل المبدئي
+    renderQuestions('all');
+  </script>
+</body>
+</html>
