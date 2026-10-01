@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بنك أسئلة الحاسب والذكاء الاصطناعي (100 سؤال عربي و 100 لغات)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700&display=swap');
+
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #2563eb;
+      --secondary: #0d9488;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --correct: #16a34a;
+      --wrong: #dc2626;
+      --border: #cbd5e1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Cairo', 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 940px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 24px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .title-area h1 {
+      font-size: 1.45rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .title-area p {
+      font-size: 0.95rem;
+      opacity: 0.92;
+    }
+
+    .score-board {
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(8px);
+      padding: 12px 22px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1.15rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #172554;
+    }
+
+    .btn-outline {
+      background-color: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      background-color: #f1f5f9;
+    }
+
+    .question-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .question-card.en-card {
+      direction: ltr;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      border-left: 5px solid var(--secondary);
+      border-right: 1px solid var(--border);
+      background-color: #fcfdfe;
+    }
+
+    .question-card.ar-card {
+      border-right: 5px solid var(--primary-light);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .badge-ar {
+      background-color: #dbeafe;
+      color: #1e40af;
+    }
+
+    .badge-en {
+      background-color: #ccfbf1;
+      color: #0f766e;
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 640px) {
+      .options-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .option-btn {
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      background: white;
+      border-radius: 8px;
+      text-align: inherit;
+      font-size: 0.95rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary-light);
+      background-color: #eff6ff;
+    }
+
+    .option-btn.correct {
+      background-color: #dcfce7 !important;
+      border-color: var(--correct) !important;
+      color: #14532d;
+      font-weight: 700;
+    }
+
+    .option-btn.wrong {
+      background-color: #fee2e2 !important;
+      border-color: var(--wrong) !important;
+      color: #7f1d1d;
+    }
+
+    .feedback {
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .feedback.correct {
+      background-color: #f0fdf4;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .feedback.wrong {
+      background-color: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="title-area">
+        <h1>بنك أسئلة البرمجة والذكاء الاصطناعي (الدرسان 1-1 و 1-2)</h1>
+        <p>100 سؤال عربي و 100 سؤال لغات (200 بطاقة سؤال تفاعلية) - شامل كتاب الوزارة وكتاب التقييمات والأداءات</p>
+      </div>
+      <div class="score-board">
+        الدرجة: <span id="score">0</span> / <span id="answered">0</span>
+      </div>
+    </header>
+
+    <div class="controls">
+      <button class="btn btn-outline" onclick="filterQuestions('all')">عرض الكل (All 200)</button>
+      <button class="btn btn-outline" onclick="filterQuestions('ar')">العربي فقط (100 Arabic)</button>
+      <button class="btn btn-outline" onclick="filterQuestions('en')">اللغات فقط (100 English)</button>
+      <button class="btn btn-primary" onclick="resetQuiz()">إعادة تعيين (Reset Quiz)</button>
+    </div>
+
+    <div id="quiz-list"></div>
+  </div>
+
+  <script>
+    // 100 زوج أسئلة متطابقة بالكامل (100 عربي + 100 إنجليزي = 200 بطاقة تفاعلية)
+    // تم توزيع الإجابات الصحيحة بالتساوي بين 0 و 1 و 2 و 3 (25 سؤال لكل موقع بالضبط)
+    const rawPairs = [
+      // --- المجموعة الأولى (الأسئلة 1 - 25) ---
+      {
+        ar: {
+          q: "ما هي التقنية التي اعتمدت عليها حواسيب الأربعينيات إلى الستينيات مثل حاسوب ENIAC؟",
+          opts: ["الصمامات المفرغة والترانزستورات الأولى", "المعالجات فائقة التوصيل", "الدوائر المتكاملة المصغرة جداً", "الحوسبة الكمومية المتقدمة"],
+          ans: 0,
+          exp: "اعتمدت الحواسيب الأولى على الصمامات المفرغة مسببة حجماً ضخماً واستهلاكاً كبيراً للطاقة."
+        },
+        en: {
+          q: "Which technology did early computers in the 1940s-1960s like ENIAC rely on?",
+          opts: ["Vacuum tubes and early transistors", "Superconducting microchips", "Ultra-scale integrated circuits", "Advanced quantum computing"],
+          ans: 0,
+          exp: "Early computers relied on vacuum tubes, resulting in huge physical size and heavy power draw."
+        }
+      },
+      {
+        ar: {
+          q: "في أي حقبة بدأت أجهزة الحاسوب الشخصية (PCs) بالدخول للمنازل والمكاتب الصغيرة؟",
+          opts: ["الأربعينيات إلى الخمسينيات", "السبعينيات إلى الثمانينيات", "العقد الثاني من الألفية", "التسعينيات فقط"],
+          ans: 1,
+          exp: "شهدت فترة السبعينيات والثمانينيات انطلاق الحواسيب الشخصية بفضل ابتكار المعالجات الدقيقة."
+        },
+        en: {
+          q: "During which era did personal computers (PCs) start entering homes and small offices?",
+          opts: ["1940s to 1950s", "1970s to 1980s", "2010s onwards", "1990s only"],
+          ans: 1,
+          exp: "The 1970s-1980s saw the emergence of PCs enabled by microprocessors."
+        }
+      },
+      {
+        ar: {
+          q: "الحدث التكنولوجي الأبرز في فترة التسعينيات والذي غير أسلوب تدفق المعلومات عالمياً هو:",
+          opts: ["ظهور الحوسبة الكمومية التجارية", "اختراع الصمامات المفرغة", "إتاحة الإنترنت تجارياً وظهور الويب", "صناعة أول هاتف ذكي بشاشة لمس"],
+          ans: 2,
+          exp: "في التسعينيات أتيح الإنترنت للاستخدام التجاري وظهرت الشبكة العنكبوتية والبريد الإلكتروني."
+        },
+        en: {
+          q: "The defining technological breakthrough in the 1990s that changed global communication was:",
+          opts: ["Commercial quantum rollout", "Invention of vacuum tubes", "Commercial Internet access and web browsers", "The first modern smartphone"],
+          ans: 2,
+          exp: "Commercial internet access and the World Wide Web revolutionized information exchange in the 1990s."
+        }
+      },
+      {
+        ar: {
+          q: "ما الحقبة التي شهدت انتشار الهواتف الذكية وتوفير الوصول المتنقل الدائم للإنترنت؟",
+          opts: ["السبعينيات من القرن الماضي", "الثمانينيات من القرن الماضي", "التسعينيات من القرن الماضي", "العقد الأول من الألفية"],
+          ans: 3,
+          exp: "العقد الأول من الألفية تميز بظهور الهواتف الذكية وشبكات المحمول عالية السرعة."
+        },
+        en: {
+          q: "Which decade witnessed the widespread adoption of smartphones and mobile internet?",
+          opts: ["1970s decade", "1980s decade", "1990s decade", "First decade of the millennium (2000s)"],
+          ans: 3,
+          exp: "The 2000s saw the smartphone explosion, enabling mobile connectivity anywhere."
+        }
+      },
+      {
+        ar: {
+          q: "تقديم موارد تكنولوجيا المعلومات (تخزين، خوادم، برمجيات) كخدمة عبر الإنترنت يسمى:",
+          opts: ["الحوسبة السحابية", "الحوسبة الطرفية", "الواقع الافتراضي", "التشفير المتماثل"],
+          ans: 0,
+          exp: "الحوسبة السحابية توفر الموارد التقنية حسب الطلب عبر شبكة الإنترنت كخدمة."
+        },
+        en: {
+          q: "Delivering IT resources (storage, servers, software) as an on-demand service over the Internet is called:",
+          opts: ["Cloud Computing", "Edge Computing", "Virtual Reality", "Symmetric Cryptography"],
+          ans: 0,
+          exp: "Cloud computing offers pooled computing infrastructure on demand over the Internet."
+        }
+      },
+      {
+        ar: {
+          q: "ينص قانون مور على أن عدد الترانزستورات داخل الدائرة المتكاملة يتضاعف تقريباً كل:",
+          opts: ["ستة أشهر", "عامين اثنين", "عشر سنوات", "خمس سنوات"],
+          ans: 1,
+          exp: "لاحظ جوردون مور أن عدد الترانزستورات في الشريحة يتضاعف كل عامين تقريباً."
+        },
+        en: {
+          q: "Moore's Law states that the number of transistors on an integrated circuit doubles roughly every:",
+          opts: ["6 months", "2 years", "10 years", "5 years"],
+          ans: 1,
+          exp: "Gordon Moore observed that transistor counts double approximately every two years."
+        }
+      },
+      {
+        ar: {
+          q: "ما التحدي الفيزيائي الناتج عن زيادة صغر الترانزستور لدرجة تسرب الطاقة والحرارة أثناء إيقافه؟",
+          opts: ["التراكب الكمي", "الواقع المعزز", "تيارات التسرب", "المعالجة المتوازية"],
+          ans: 2,
+          exp: "مع رقة العوازل تتسرب الشحنات الكهربائية مسببة فقداً للطاقة وحرارة عالية تُعرف بتيارات التسرب."
+        },
+        en: {
+          q: "Which physical challenge occurs when nanoscale transistors leak power and heat while switched off?",
+          opts: ["Quantum superposition", "Augmented reality", "Leakage currents", "Parallel processing"],
+          ans: 2,
+          exp: "Extremely thin dielectric gates cause electric current leakage during idle states."
+        }
+      },
+      {
+        ar: {
+          q: "الظاهرة الكمومية التي تجعل الإلكترونات تقفز عبر الحواجز العازلة الضيقة بالمعالج تسمى:",
+          opts: ["التداخل البصري", "الحوسبة السحابية", "التشفير غير المتماثل", "النفق الكمومي"],
+          ans: 3,
+          exp: "النفق الكمومي يسمح للإلكترونات باختراق الحواجز المادية عند المقاييس الذرية في المعالجات المصغرة."
+        },
+        en: {
+          q: "The quantum phenomenon where electrons tunnel through thin insulating barriers in chips is:",
+          opts: ["Optical interference", "Cloud hosting", "Asymmetric cryptography", "Quantum Tunneling"],
+          ans: 3,
+          exp: "Quantum tunneling prevents nanoscale silicon gates from shutting off completely."
+        }
+      },
+      {
+        ar: {
+          q: "للالتفاف على صعوبة زيادة تردد النواة الواحدة بسبب الحرارة، اتجهت صناعة المعالجات إلى:",
+          opts: ["تعدد الأنوية والمعالجة المتوازية", "الرجوع للصمامات المفرغة القديمة", "إلغاء المعالجات تماماً", "استخدام شاشات العرض التناظرية"],
+          ans: 0,
+          exp: "اعتمدت الصناعة على المعالجات متعددة الأنوية لتقسيم العمل بالتوازي بدلاً من رفع التردد الفردي."
+        },
+        en: {
+          q: "To overcome physical scaling limitations on single-core clock speeds, modern processor architecture shifted to:",
+          opts: ["Multi-core processors and parallel processing", "Reverting to legacy vacuum tubes", "Eliminating microprocessors completely", "Using analog visual displays"],
+          ans: 0,
+          exp: "Chipmakers adopted multi-core layouts and parallel computing architectures."
+        }
+      },
+      {
+        ar: {
+          q: "معالجة البيانات محلياً على الجهاز نفسه لتقليل زمن التأخير وتجنب إرسالها للسحابة تسمى:",
+          opts: ["الحوسبة المركزية", "الحوسبة الطرفية", "الواقع الافتراضي", "التجارة الإلكترونية"],
+          ans: 1,
+          exp: "الحوسبة الطرفية تجري العمليات الحسابية على الجهاز نفسه بالقرب من أجهزة الاستشعار."
+        },
+        en: {
+          q: "Processing sensor data locally on the device to minimize latency instead of relying on the cloud is:",
+          opts: ["Centralized computing", "Edge Computing", "Virtual Reality", "Electronic Commerce"],
+          ans: 1,
+          exp: "Edge computing performs processing directly on board close to the data source."
+        }
+      },
+      {
+        ar: {
+          q: "لماذا تعتمد أنظمة القيادة الذاتية على الحوسبة الطرفية في قرارات التوقف الطارئ؟",
+          opts: ["لأنها مجانية التكلفة فقط", "لأنها تلغي استهلاك الكهرباء", "لتقليل زمن الاستجابة إلى أجزاء من الثانية تفادياً للحوادث", "لكي تشغل الوسائط الترفيهية"],
+          ans: 2,
+          exp: "الفرملة الطارئة تتطلب سرعة استجابة فائقة لا تحتمل بطء شبكات الإنترنت أو انقطاعها."
+        },
+        en: {
+          q: "Why do autonomous vehicles rely on edge computing for emergency braking?",
+          opts: ["Because it is completely cost-free", "Because it uses zero electrical power", "To achieve ultra-low latency within milliseconds to prevent collisions", "To stream infotainment services"],
+          ans: 2,
+          exp: "Instant driving decisions cannot tolerate network latency or lost cloud connections."
+        }
+      },
+      {
+        ar: {
+          q: "تقنية تسقط عناصر ورسومات رقمية ومعلومات تفاعلية فوق مشهد العالم الواقعي الحقيقي هي:",
+          opts: ["الواقع الافتراضي", "الحوسبة الطرفية", "الحوسبة الكمية", "الواقع المعزز"],
+          ans: 3,
+          exp: "الواقع المعزز (AR) يعرض طبقة بيانات ورسومات رقمية فوق بيئة العالم الواقعي دون حجبها."
+        },
+        en: {
+          q: "A technology that superimposes 3D digital elements and data over the physical real world is:",
+          opts: ["Virtual Reality", "Edge Computing", "Quantum Computing", "Augmented Reality (AR)"],
+          ans: 3,
+          exp: "AR overlays digital information seamlessly onto live real surroundings."
+        }
+      },
+      {
+        ar: {
+          q: "تقنية تعزل المستخدم تماماً عن بيئته الحقيقية وتدخله في عالم رقمي مولد حاسوبياً 100% هي:",
+          opts: ["الواقع الافتراضي", "الواقع المعزز", "الحوسبة الطرفية", "البت الثنائي"],
+          ans: 0,
+          exp: "الواقع الافتراضي (VR) يحجب الرؤية الحقيقية بنظارة مغلقة ويعرض بيئة ثلاثية الأبعاد كاملة."
+        },
+        en: {
+          q: "A technology that completely isolates users from their physical environment into a simulated digital world is:",
+          opts: ["Virtual Reality (VR)", "Augmented Reality (AR)", "Edge Computing", "Classical Binary Bit"],
+          ans: 0,
+          exp: "VR fully immerses users into an artificial 360-degree computer-generated environment."
+        }
+      },
+      {
+        ar: {
+          q: "ما هي وحدة المعلومات الأساسية في الحوسبة التقليدية؟",
+          opts: ["الكيوبت", "البت", "النانوميتر", "البايت المزدوج"],
+          ans: 1,
+          exp: "البت التقليدي هو أصغر وحدة ويحمل إما القيمة 0 أو 1 حصراً."
+        },
+        en: {
+          q: "What is the fundamental unit of information in classical computing?",
+          opts: ["Qubit", "Bit", "Nanometer", "Double byte"],
+          ans: 1,
+          exp: "A classical bit is strictly binary: taking either state 0 or 1."
+        }
+      },
+      {
+        ar: {
+          q: "ما هي وحدة المعلومات الأساسية المستخدمة في أنظمة الحوسبة الكمومية؟",
+          opts: ["البت الثنائي", "البايت المجمع", "الكيوبت", "الترانزستور النانوي"],
+          ans: 2,
+          exp: "الكيوبت (Qubit) هو الوحدة الكمومية المعتمدة على حالات فيزياء الكم."
+        },
+        en: {
+          q: "What is the primary unit of quantum information?",
+          opts: ["Binary Bit", "Aggregated Byte", "Qubit", "Nanoscale Transistor"],
+          ans: 2,
+          exp: "A qubit is the basic unit of quantum information utilizing quantum mechanics."
+        }
+      },
+      {
+        ar: {
+          q: "تسمى قدرة الكيوبت على تمثيل خليط احتمالي من حالتي 0 و1 معاً في نفس الوقت بـ:",
+          opts: ["النفق الكمومي", "التسرب الكهربائي", "الانعكاس الافتراضي", "التراكب الكمومي"],
+          ans: 3,
+          exp: "التراكب الكمومي يسمح بتواجد الكيوبت في توليفة احتمالية من الحالتين بالتزامن."
+        },
+        en: {
+          q: "The ability of a qubit to exist in a continuous combination of both 0 and 1 simultaneously is called:",
+          opts: ["Quantum Tunneling", "Electrical Leakage", "Virtual Reflection", "Quantum Superposition"],
+          ans: 3,
+          exp: "Superposition allows concurrent probabilistic representation of both 0 and 1."
+        }
+      },
+      {
+        ar: {
+          q: "التمثيل الهندسي الرياضي الذي يستخدم كرة لعرض حالة الكيوبت وتراكبه يسمى:",
+          opts: ["كرة بلوخ", "كرة نيوتن", "مكعب تورينج", "دائرة إينياك"],
+          ans: 0,
+          exp: "كرة بلوخ هي النموذج الهندسي ثلاثي الأبعاد لحالة الكيوبت وتراكبه الكمومي."
+        },
+        en: {
+          q: "The geometric sphere representation used to map the state of a single qubit is known as the:",
+          opts: ["Bloch Sphere", "Newton Sphere", "Turing Cube", "ENIAC Circle"],
+          ans: 0,
+          exp: "The Bloch sphere visualizes state vectors in quantum mechanics."
+        }
+      },
+      {
+        ar: {
+          q: "هل الحوسبة الكمومية بديل عام وشامل سيلغي جميع الحواسيب التقليدية في منازلنا ومكاتبنا؟",
+          opts: ["نعم، ستلغي الحواسيب الشخصية فوراً", "لا، هي نهج مختلف مخصص لمسائل علمية محددة", "نعم، لكونها أقل سعراً وأسهل تصنيعاً", "نعم، لأنها تعمل بدون كهرباء تماماً"],
+          ans: 1,
+          exp: "الحوسبة الكمومية ليست بديلاً عاماً وإنما أداة لحل فئات رياضية وعلمية محددة بالغة التعقيد."
+        },
+        en: {
+          q: "Is quantum computing a universal replacement that will obsolete all personal computers?",
+          opts: ["Yes, replacing all PCs immediately", "No, it is a specialized approach for specific complex problems", "Yes, because it is cheaper to manufacture", "Yes, because it operates without electricity"],
+          ans: 1,
+          exp: "Quantum systems are dedicated solvers for distinct mathematical and scientific domains."
+        }
+      },
+      {
+        ar: {
+          q: "بيع وشراء المنتجات والخدمات عبر المتاجر الرقمية واستلامها في المنازل يمثل تحول:",
+          opts: ["العمل عن بعد", "التعلم عبر الإنترنت", "التجارة الإلكترونية", "الدفع النقدي التقليدي"],
+          ans: 2,
+          exp: "التجارة الإلكترونية هي بيع وشراء السلع والخدمات عبر منصات الإنترنت."
+        },
+        en: {
+          q: "Buying and selling goods or services online with home delivery represents:",
+          opts: ["Remote Work", "Online Learning", "E-Commerce", "Cash Transactions"],
+          ans: 2,
+          exp: "E-Commerce conducts retail transactions over the internet."
+        }
+      },
+      {
+        ar: {
+          q: "أداء الموظف لمهامه الوظيفية وعقد الاجتماعات مع زملائه من المنزل أو موقع بعيد عبر الإنترنت يُعرف بـ:",
+          opts: ["التعليم الإلكتروني", "الحوسبة الطرفية", "التصنيع الميكانيكي", "العمل عن بعد"],
+          ans: 3,
+          exp: "العمل عن بعد يعتمد على السحابة وشبكات الاتصال لأداء المهام الوظيفية من أي مكان."
+        },
+        en: {
+          q: "Executing professional duties and team meetings from home using internet platforms is:",
+          opts: ["Online Learning", "Edge Computing", "Mechanical Fabrication", "Remote Work"],
+          ans: 3,
+          exp: "Remote work untethers productivity from centralized physical offices."
+        }
+      },
+      {
+        ar: {
+          q: "استخدام تطبيقات الهواتف الذكية ومسح رموز QR لسداد ثمن المشتريات يسمى:",
+          opts: ["الدفع غير النقدي", "المعالجة المتوازية", "التشفير غير المتماثل", "الواقع الافتراضي"],
+          ans: 0,
+          exp: "الدفع غير النقدي يستبدل العملات الورقية بالتحويلات الرقمية السريعة والبطاقات ورموز QR."
+        },
+        en: {
+          q: "Using smartphone apps and QR codes to settle retail purchases is referred to as:",
+          opts: ["Cashless Payment", "Parallel Processing", "Asymmetric Encryption", "Virtual Reality"],
+          ans: 0,
+          exp: "Cashless payments settle financial transactions through digital channels."
+        }
+      },
+      {
+        ar: {
+          q: "ما التحدي الاجتماعي الذي يواجه كبار السن عند تحول الخدمات كلياً إلى الدفع والتطبيقات الرقمية؟",
+          opts: ["السرعة الفائقة للمعاملات", "الفجوة الرقمية وصعوبة التعامل مع التطبيقات", "انخفاض تكلفة السلع", "تعدد الأنوية في الهواتف"],
+          ans: 1,
+          exp: "الفجوة الرقمية تظهر عندما تعاني فئات مجتمعية ككبار السن من صعوبة التكيف مع التقنيات."
+        },
+        en: {
+          q: "Which societal challenge do non-tech-savvy elderly citizens face during digital service transitions?",
+          opts: ["Transactions executing too fast", "The Digital Divide and usability barriers", "Goods becoming too affordable", "Multi-core processor architectures"],
+          ans: 1,
+          exp: "The digital divide creates accessibility obstacles for elderly demographics."
+        }
+      },
+      {
+        ar: {
+          q: "المجال العام الواسع الذي يضم كافة الأنظمة القادرة على محاكاة السلوك الذكي البشري هو:",
+          opts: ["التعلم العميق", "التعلم الآلي", "الذكاء الاصطناعي", "الحوسبة الطرفية"],
+          ans: 2,
+          exp: "الذكاء الاصطناعي هو المظلة الكبرى الشاملة لكافة التقنيات التي تحاكي السلوك الذكي البشري."
+        },
+        en: {
+          q: "The broad umbrella discipline encompassing systems capable of mimicking human intelligent behavior is:",
+          opts: ["Deep Learning", "Machine Learning", "Artificial Intelligence", "Edge Computing"],
+          ans: 2,
+          exp: "Artificial Intelligence is the overarching field mimicking human intelligence."
+        }
+      },
+      {
+        ar: {
+          q: "أي مما يلي يصف العلاقة الصحيحة بين مفاهيم الذكاء الاصطناعي من الأوسع إلى الأكثر تخصصاً؟",
+          opts: ["التعلم العميق > التعلم الآلي > الذكاء الاصطناعي > الذكاء التوليدي", "التعلم الآلي > الذكاء الاصطناعي > التعلم العميق > الذكاء التوليدي", "الذكاء التوليدي > التعلم العميق > التعلم الآلي > الذكاء الاصطناعي", "الذكاء الاصطناعي > التعلم الآلي > التعلم العميق > الذكاء الاصطناعي التوليدي"],
+          ans: 3,
+          exp: "وفق الشكل 1.2.1: الذكاء الاصطناعي يضم التعلم الآلي، الذي يضم بدوره التعلم العميق، وفوقه الذكاء التوليدي."
+        },
+        en: {
+          q: "Which sequence correctly illustrates the nested hierarchy from broadest to most specialized?",
+          opts: ["DL > ML > AI > GenAI", "ML > AI > DL > GenAI", "GenAI > DL > ML > AI", "AI > ML > DL > GenAI"],
+          ans: 3,
+          exp: "AI encompasses ML, which encompasses DL, with modern GenAI built atop DL."
+        }
+      },
+      {
+        ar: {
+          q: "الفرع الذي تتعلم فيه النماذج استخراج الأنماط ذاتياً من البيانات لإجراء تنبؤات دون برمجة القواعد صراحة هو:",
+          opts: ["التعلم الآلي", "الحوسبة الكلاسيكية", "البرمجة التقليدية", "الحوسبة الطرفية"],
+          ans: 0,
+          exp: "التعلم الآلي يعتمد على البيانات والأمثلة لاستنتاج الأنماط دون كتابة كل قاعدة يدوياً."
+        },
+        en: {
+          q: "The field where models independently learn patterns from data without explicit hardcoded rules is:",
+          opts: ["Machine Learning", "Classical Computing", "Traditional Programming", "Edge Computing"],
+          ans: 0,
+          exp: "Machine learning infers underlying patterns directly from data and past examples."
+        }
+      },
+
+      // --- المجموعة الثانية (الأسئلة 26 - 50) ---
+      {
+        ar: {
+          q: "أسلوب متقدم من أساليب التعلم الآلي يعتمد على شبكات عصبية اصطناعية متعددة الطبقات هو:",
+          opts: ["البرمجة الإجرائية", "التعلم العميق", "التشفير المتماثل", "المنطق الصوري"],
+          ans: 1,
+          exp: "التعلم العميق يعتمد على شبكات عصبية متعددة الطبقات مستوحاة من ترابط عصبونات الدماغ."
+        },
+        en: {
+          q: "An advanced machine learning approach relying on multi-layered artificial neural networks is:",
+          opts: ["Procedural Programming", "Deep Learning", "Symmetric Encryption", "Formal Logic"],
+          ans: 1,
+          exp: "Deep Learning utilizes deep multi-layer neural architectures to extract complex representations."
+        }
+      },
+      {
+        ar: {
+          q: "تطبيقات مثل ChatGPT ومولدات الصور التي تنشئ بيانات ومحتوى جديداً غير مسبوق تسمى:",
+          opts: ["مرشحات الرسائل المزعجة", "نظم القواعد الصلبة", "الذكاء الاصطناعي التوليدي", "قواعد البيانات العلائقية"],
+          ans: 2,
+          exp: "الذكاء الاصطناعي التوليدي يُنشئ محتوى جديداً أصيلاً (نصوص، صور، صوت، كود) بناءً على ما تعلمه."
+        },
+        en: {
+          q: "Systems like ChatGPT and Midjourney that create original content and data in response to prompts are:",
+          opts: ["Spam Filters", "Rule-based engines", "Generative AI (GenAI)", "Relational Databases"],
+          ans: 2,
+          exp: "Generative AI produces novel text, imagery, and audio based on learned patterns."
+        }
+      },
+      {
+        ar: {
+          q: "تعتمد غالبية أنظمة الذكاء الاصطناعي التوليدي (GenAI) الحديثة في بنيتها التحتية على:",
+          opts: ["الصمامات المفرغة", "البرمجة الخطية الثابتة", "الحوسبة الميكانيكية", "نماذج التعلم العميق"],
+          ans: 3,
+          exp: "تعتمد غالبية تطبيقات وأنظمة الذكاء الاصطناعي التوليدي الحديثة على نماذج ومعماريات التعلم العميق."
+        },
+        en: {
+          q: "Most modern Generative AI systems fundamentally rely on:",
+          opts: ["Vacuum tubes", "Rigid linear coding", "Mechanical processing", "Deep Learning models"],
+          ans: 3,
+          exp: "State-of-the-art Generative AI is predominantly built upon deep learning networks."
+        }
+      },
+      {
+        ar: {
+          q: "تتكون الشبكة العصبية الاصطناعية من وحدات معالجة مترابطة، وتسمى الطبقة التي تستقبل البيانات الأولية الخام بـ:",
+          opts: ["طبقة الإدخال", "الطبقة المخفية", "طبقة الإخراج", "طبقة القرار"],
+          ans: 0,
+          exp: "طبقة الإدخال (Input Layer) هي الطبقة الأولى المسؤولة عن استقبال البيانات الخام كبكسلات الصور."
+        },
+        en: {
+          q: "In an artificial neural network, the layer receiving raw initial input data is the:",
+          opts: ["Input Layer", "Hidden Layer", "Output Layer", "Decision Layer"],
+          ans: 0,
+          exp: "The input layer ingests raw signals directly from incoming datasets."
+        }
+      },
+      {
+        ar: {
+          q: "ما هي الطبقات المسؤولة عن استخراج السمات المعقدة والأنماط تدريجياً داخل الشبكة العصبية؟",
+          opts: ["طبقة التوصيل الخارجي", "الطبقات المخفية", "طبقة الإدخال فقط", "طبقة البت"],
+          ans: 1,
+          exp: "الطبقات المخفية (Hidden Layers) تقع بين الإدخال والإخراج وتستخلص السمات المعقدة تدريجياً."
+        },
+        en: {
+          q: "Which layers in a neural network progressively extract features and complex patterns?",
+          opts: ["External Interface Layer", "Hidden Layers", "Input Layer only", "Bit Layer"],
+          ans: 1,
+          exp: "Hidden layers process intermediate representations and feature hierarchies."
+        }
+      },
+      {
+        ar: {
+          q: "ماذا تسمى معاملات الاتصال بين العصبونات الاصطناعية والتي تتغير وتتعدل أثناء التدريب لتقليل الخطأ؟",
+          opts: ["البتات الثنائية", "خوادم السحابة", "الأوزان", "الصمامات المنطقية"],
+          ans: 2,
+          exp: "تتغير الأوزان (Weights) بين وحدات الشبكة باستمرار أثناء التدريب لتقليل الخطأ وتحسين الدقة."
+        },
+        en: {
+          q: "The adjustable parameters connecting artificial neurons that update during training to reduce error are:",
+          opts: ["Binary bits", "Cloud hosts", "Weights", "Logic switches"],
+          ans: 2,
+          exp: "Synaptic weights are tuned via training algorithms to minimize loss."
+        }
+      },
+      {
+        ar: {
+          q: "تصف كتب الوزارة معظم أنظمة الذكاء الاصطناعي المنتشرة في عالمنا اليوم بأنها:",
+          opts: ["ذكاء اصطناعي واعي ومدرك", "ذكاء اصطناعي عام يتفوق على الإنسان في كل المجالات", "أنظمة ميكانيكية غير رقمية", "ذكاء اصطناعي ضيق النطاق يتقن مهمة واحدة محددة"],
+          ans: 3,
+          exp: "معظم الأنظمة الحالية هي Narrow AI مصممة لإتقان مهمة محددة بكفاءة عالية دون وعي عام."
+        },
+        en: {
+          q: "The curriculum characterizes most current AI systems deployed in society as:",
+          opts: ["Sentient conscious intelligence", "Universal Artificial General Intelligence", "Analog mechanical engines", "Narrow AI designed for a specific task"],
+          ans: 3,
+          exp: "Contemporary AI comprises Narrow AI specialized in specific designated objectives."
+        }
+      },
+      {
+        ar: {
+          q: "أي مما يلي يُعد مثالاً مباشراً على تطبيقات التعلّم الآلي الكلاسيكي الواردة في المنهج؟",
+          opts: ["مرشحات الرسائل المزعجة وتوصيات المتاجر", "توليد مقاطع الفيديو الفنية المعقدة", "كتابة الأكواد ببرامج المحادثة", "تصنيع المعالجات الدقيقة بالليزر"],
+          ans: 0,
+          exp: "تصنيف البريد المزعج وترشيحات المنتجات كلاهما تطبيقا تعلم آلي يتعلمان من سلوك وبيانات سابقة."
+        },
+        en: {
+          q: "Which of the following is a direct curriculum example of classical Machine Learning?",
+          opts: ["Spam filters and retail product recommendations", "Generative artistic video rendering", "Conversational code autocompletion", "Laser chip lithography"],
+          ans: 0,
+          exp: "Spam filtering and recommendation engines are canonical machine learning examples."
+        }
+      },
+      {
+        ar: {
+          q: "توليد نموذج الذكاء الاصطناعي لمعلومات غير صحيحة أو مختلقة تماماً بأسلوب لغوي مقنع يُعرف بظاهرة:",
+          opts: ["التشويش الشبكي", "الهلوسة", "الضغط الرقمي", "الانحدار الخطي"],
+          ans: 1,
+          exp: "الهلوسة (Hallucination) هي اختلاق إجابات ومعلومات غير حقيقية لكنها مصاغة بأسلوب واثق ومقنع."
+        },
+        en: {
+          q: "When a generative AI model outputs fabricated, incorrect information in a confident tone, it is:",
+          opts: ["Network Jitter", "Hallucination", "Digital Compression", "Linear Decay"],
+          ans: 1,
+          exp: "AI hallucination refers to plausible-sounding yet factually false generations."
+        }
+      },
+      {
+        ar: {
+          q: "ما السبب العلمي والتقني لحدوث ظاهرة الهلوسة في نماذج الذكاء الاصطناعي التوليدي؟",
+          opts: ["ارتفاع درجة حرارة الشاشات", "وجود فيروسات دائمة في جميع الأجهزة", "اعتماد النماذج على التوقع الإحصائي للكلمات دون إدراك حقيقي للواقع", "انقطاع التيار الكهربائي المتكرر"],
+          ans: 2,
+          exp: "النماذج تتوقع إحصائياً الكلمة التالية الأكثر احتمالاً؛ فإذا واجهت نقصاً أو سياقاً معقداً قد تختلق وقائع."
+        },
+        en: {
+          q: "What is the underlying technical cause of AI hallucination in generative models?",
+          opts: ["Display monitor overheating", "Permanent computer virus infection", "Predicting next tokens statistically without actual factual comprehension", "Intermittent power failure"],
+          ans: 2,
+          exp: "Models predict statistically likely next words rather than reasoning about grounded truth."
+        }
+      },
+      {
+        ar: {
+          q: "ما الإجراء السليم الواجب على الطالب اتباعه للتعامل مع مخاطر ظاهرة الهلوسة في واجباته المدرسية؟",
+          opts: ["النسخ واللصق الفوري للاستجابات", "عدم استخدام التكنولوجيا إطلاقاً", "إلغاء البحث العلمي المدرسي", "التحقق البشري من المخرجات والرجوع للكتب والمصادر الموثوقة"],
+          ans: 3,
+          exp: "يجب على المتعلم التحقق من صحة المخرجات ومقارنتها بالكتب والمصادر الموثوقة قبل اعتمادها."
+        },
+        en: {
+          q: "What recommended procedure should students follow to address hallucination risks in assignments?",
+          opts: ["Direct copy-pasting of AI outputs", "Refusing to touch technology altogether", "Abolishing research assignments", "Human verification against authoritative textbooks and validated sources"],
+          ans: 3,
+          exp: "Students must critically verify generated claims against authoritative curricula."
+        }
+      },
+      {
+        ar: {
+          q: "في البرمجة التقليدية يحصل الحاسوب على البيانات والقواعد لينتج المخرجات، أما في التعلّم الآلي فالمدخلات هي:",
+          opts: ["البيانات والنتائج السابقة ليستنتج النموذج القواعد والأنماط", "قواعد صلبة دون الحاجة لأي بيانات", "أسلاك التوصيل والمفاتيح الميكانيكية فقط", "الصور المولدة بالذكاء الاصطناعي فقط"],
+          ans: 0,
+          exp: "في التعلم الآلي يُعطى النظام البيانات والنتائج السابقة فيتعلم استخراج الأنماط والقواعد تلقائياً."
+        },
+        en: {
+          q: "In classical programming rules and data produce answers, whereas in Machine Learning inputs are:",
+          opts: ["Data and past answers so the model induces patterns and rules", "Rigid rules without providing data", "Mechanical jumper wires and toggles", "Synthetically generated AI art"],
+          ans: 0,
+          exp: "Machine learning takes data and prior outputs to infer functional rules."
+        }
+      },
+      {
+        ar: {
+          q: "إذا أراد مزارع تدريب نظام ذكاء اصطناعي لتمييز أوراق المحاصيل المصابة، فإنه يحتاج إلى:",
+          opts: ["بيانات نصية عن أسعار السوق فقط", "آلاف الصور الرقمية المتنوعة والمصنفة لأوراق سليمة ومصابة", "كاميرا تعمل بدون برمجيات", "جهاز حاسوب قديم يعتمد على الصمامات"],
+          ans: 1,
+          exp: "يحتاج النظام لآلاف الصور الرقمية المصنفة بدقة (Labeled Data) في ظروف إضاءة متنوعة."
+        },
+        en: {
+          q: "To train an AI model to detect crop disease from plant leaves, a farmer primarily needs:",
+          opts: ["Text logs of wholesale prices", "Thousands of varied, labeled digital images of healthy and diseased leaves", "A camera without software support", "A vacuum-tube based terminal"],
+          ans: 1,
+          exp: "Supervised models require large sets of labeled visual image examples."
+        }
+      },
+      {
+        ar: {
+          q: "ما العامل الذي قد يؤدي إلى فشل نظام تمييز أمراض النباتات ووقوعه في أخطاء تنبؤية؟",
+          opts: ["استخدام معالج حديث متعدد الأنوية", "ارتفاع سرعة شبكة الإنترنت", "ضعف تنوع بيانات التدريب أو ظهور آفة جديدة لم يشملها التدريب", "وضوح الصور ودقتها العالية"],
+          ans: 2,
+          exp: "ضعف التنوع كتدريب النظام في النهار فقط، أو ظهور مرض جديد، يجعل تنبؤات النموذج خاطئة."
+        },
+        en: {
+          q: "Which factor is most likely to cause an automated plant diagnosis model to fail?",
+          opts: ["Upgrading to multi-core processing", "High-speed broadband connectivity", "Poor training data diversity or encountering a novel unseen disease", "Crystal-clear high image quality"],
+          ans: 2,
+          exp: "Narrow training distribution or unrepresented anomalies causes generalization errors."
+        }
+      },
+      {
+        ar: {
+          q: "من التطبيقات البارزة للتعلم العميق في مجال الرعاية الصحية والطب الواردة في المنهج:",
+          opts: ["طباعة فواتير التأمين الصحي على الورق", "تشغيل أجهزة التكييف بالمستشفيات", "تنظيم ملفات الأرشيف يدوياً", "فحص صور الأشعة السينية لاكتشاف الأورام والأمراض الدقيقة"],
+          ans: 3,
+          exp: "يبرع التعلم العميق في فحص صور الأشعة السينية والمقطعية لاكتشاف الأورام الدقيقة بمهارة عالية."
+        },
+        en: {
+          q: "A prominent curriculum application of Deep Learning in healthcare and medicine is:",
+          opts: ["Printing paper hospital bills", "Controlling ward air conditioning", "Manual document filing", "Screening X-ray imagery to detect subtle tumors and pathology"],
+          ans: 3,
+          exp: "Deep neural networks excel at feature analysis in clinical radiography scans."
+        }
+      },
+      {
+        ar: {
+          q: "يحتاج التعلم العميق ليحقق نتائج دقيقة وموثوقة إلى عاملين أساسيين هما:",
+          opts: ["بيانات ضخمة جداً وقدرات حوسبة فائقة", "حواسيب قديمة وبطاريات صغيرة", "قواعد برمجية يدوية فقط دون بيانات", "شاشات عرض تقليدية أحادية اللون"],
+          ans: 0,
+          exp: "يتطلب التعلم العميق بيانات ضخمة (Big Data) وقدرات معالجة فائقة مثل معالجات GPUs."
+        },
+        en: {
+          q: "To achieve reliable representations, Deep Learning fundamentally requires:",
+          opts: ["Massive big data and high-performance computing power", "Legacy computers and low-capacity cells", "Exclusively manual rules with zero data", "Monochrome display monitors"],
+          ans: 0,
+          exp: "Deep networks depend on vast training datasets and heavy computational accelerators."
+        }
+      },
+      {
+        ar: {
+          q: "أي مما يلي يُعد تطبيقاً مباشراً على الذكاء الاصطناعي التوليدي في مجال الفن والتصميم الرقمي؟",
+          opts: ["ماسحات الباركود بالمتاجر", "أداة Midjourney لإنشاء صور أصلية من خلال الوصف النصي", "برامج ضغط الملفات النصية", "محركات حساب الجداول المدرسية"],
+          ans: 1,
+          exp: "أدوات توليد الصور مثل Midjourney تُنشئ أعمالاً فنية وصوراً أصلية من الأوامر النصية (Prompts)."
+        },
+        en: {
+          q: "Which tool exemplifies Generative AI applied to digital art and graphic synthesis?",
+          opts: ["Point-of-sale barcode scanners", "Midjourney generating original images from text descriptions", "File compression archives", "School scheduling calculators"],
+          ans: 1,
+          exp: "Midjourney generates synthetic visual art conditioned on natural language prompts."
+        }
+      },
+      {
+        ar: {
+          q: "في أنظمة المتاجر الإلكترونية، عندما يقترح الموقع كتباً أو أدوات بناءً على مشترياتك السابقة، يسمى هذا:",
+          opts: ["الحوسبة الطرفية", "التراكب الكمومي", "نظام التوصية", "جدار الحماية"],
+          ans: 2,
+          exp: "نظام التوصية (Recommendation System) يتنبأ بتفضيلاتك بالاستناد لبيانات وسلوكيات سابقة."
+        },
+        en: {
+          q: "When an online store suggests items based on your prior browsing and purchase history, it uses a:",
+          opts: ["Edge Computing Module", "Quantum Superposition State", "Recommendation System", "Network Firewall"],
+          ans: 2,
+          exp: "Recommendation systems predict consumer affinities based on past behavioral history."
+        }
+      },
+      {
+        ar: {
+          q: "تطبيق كاميرا الهاتف الذي يتعرف على الوجوه ويفتح قفل الشاشة حتى مع ارتداء النظارة يعتمد جوهرياً على:",
+          opts: ["الصمامات المفرغة", "البتات الكلاسيكية الثنائية فقط", "البرمجة الإجرائية الثابتة", "التعلم العميق وبصمة الوجه"],
+          ans: 3,
+          exp: "يعتمد التعرف على الوجه (Face ID) على شبكات عصبية عميقة تتعرف على ملامح الوجه في مختلف الظروف."
+        },
+        en: {
+          q: "Smartphone face authentication unlocking reliably even with glasses primarily relies on:",
+          opts: ["Vacuum tubes", "Classical binary bits alone", "Procedural hardcoded logic", "Deep Learning and Face ID models"],
+          ans: 3,
+          exp: "Facial recognition networks apply deep convolutional architectures resilient to variations."
+        }
+      },
+      {
+        ar: {
+          q: "أي العبارات التالية تصف بشكل دقيق الفرق بين الذكاء الاصطناعي والتعلّم الآلي؟",
+          opts: ["الذكاء الاصطناعي هو المجال الواسع، والتعلم الآلي فرع تطبيقي يتعلم من البيانات", "هما مصطلحان مترادفان يحملان نفس المعنى تماماً دون أي فرق", "التعلم الآلي هو المجال الأوسع والذكاء الاصطناعي فرع منه", "التعلم الآلي لا علاقة له بالحواسيب إطلاقاً"],
+          ans: 0,
+          exp: "الذكاء الاصطناعي هو المظلة الكبرى، والتعلم الآلي فرع منه يُعنى باستخراج الأنماط من البيانات."
+        },
+        en: {
+          q: "Which statement accurately describes the relationship between AI and Machine Learning?",
+          opts: ["AI is the overarching field, while ML is a subfield that learns from data", "They are identical synonymous terms sharing the exact same scope", "ML is the broadest umbrella and AI is a minor subfield within it", "Machine learning does not involve digital computing systems"],
+          ans: 0,
+          exp: "AI encompasses all intelligent computation, whereas ML specializes in data-driven induction."
+        }
+      },
+      {
+        ar: {
+          q: "المُدخل النصي أو الأمر التوجيهي الذي يكتبه المستخدم لأدوات الذكاء الاصطناعي التوليدي يُعرف تقنياً بـ:",
+          opts: ["نواة المعالجة", "المُطالبة أو الأمر التوجيهي", "الترانزستور المنطقي", "الكيوبت الكمي"],
+          ans: 1,
+          exp: "يسمى الأمر التوجيهي أو الطلب الذي يوجه لنموذج الذكاء الاصطناعي بـ Prompt."
+        },
+        en: {
+          q: "The instruction or prompt provided by a user to steer Generative AI outputs is technically termed a:",
+          opts: ["Processor Core", "Prompt", "Logic Gate", "Quantum Qubit"],
+          ans: 1,
+          exp: "A user-provided instruction guiding model synthesis is termed a prompt."
+        }
+      },
+      {
+        ar: {
+          q: "ما الدور الأساسي لطبقة الإخراج (Output Layer) في الشبكة العصبية الاصطناعية المخصصة لتصنيف الصور؟",
+          opts: ["توصيل التيار الكهربائي للشاشة", "تخزين الصور في ملفات مضغوطة", "تقديم القرار أو التوقع النهائي مع نسبة الاحتمال", "استقبال إشارات بكسلات الصورة الأولية"],
+          ans: 2,
+          exp: "طبقة الإخراج مسؤولة عن تقديم القرار النهائي كنسبة احتمال تصنيف الصورة (مثل: قط بنسبة 95%)."
+        },
+        en: {
+          q: "What is the primary role of the Output Layer in an image classification neural network?",
+          opts: ["Powering the physical display monitor", "Compressing files into disk archives", "Delivering final predictions and probabilistic class scores", "Ingesting raw pixels initially"],
+          ans: 2,
+          exp: "The output layer calculates normalized classification scores across candidate categories."
+        }
+      },
+      {
+        ar: {
+          q: "عند تدريب سيارة ذاتية القيادة للتعرف على المشاة، فإن النموذج يتدرب على تمييز ملامح الأشخاص باستخدام:",
+          opts: ["الصمامات المفرغة", "البرمجة اليدوية لكل خطوة", "الشبكات الورقية", "شبكات التعلم العميق المدربة على آلاف المشاهد"],
+          ans: 3,
+          exp: "تعتمد الرؤية الحاسوبية في السيارات ذاتية القيادة على نماذج تعلم عميق مدربة على آلاف المشاهد المتنوعة."
+        },
+        en: {
+          q: "When training an autonomous vehicle to recognize pedestrians, the vision system relies upon:",
+          opts: ["Thermionic valves", "Manual step-by-step programming", "Cardboard punch grids", "Deep learning models trained on thousands of varied driving scenes"],
+          ans: 3,
+          exp: "Perception stacks use deep neural visual networks trained on expansive driving datasets."
+        }
+      },
+      {
+        ar: {
+          q: "أي مما يلي يُعد قاعدة مدرسية مسؤولة ومقترحة للتعامل مع أدوات الذكاء الاصطناعي في الأبحاث والواجبات؟",
+          opts: ["السماح باستخدامها كمساعد مع توثيق المصادر والتحقق البشري من صحة المخرجات", "منع استخدام الحواسيب تماماً داخل المدرسة", "الاعتماد الكامل على مخرجات الذكاء الاصطناعي دون مراجعة", "معاقبة أي طالب يقرأ عن التكنولوجيا الحديثة"],
+          ans: 0,
+          exp: "القاعدة المقترحة في المنهج هي السماح بها كمساعد مع الإفصاح عنها وإلزام الطالب بالتحقق البشري والتوثيق."
+        },
+        en: {
+          q: "Which policy represents a responsible academic guideline for using AI in school coursework?",
+          opts: ["Permitting use as a research aid provided outputs are human-verified and sources cited", "Completely banning student computers at school", "Uncritical reliance on AI text without review", "Penalizing students who study modern technology"],
+          ans: 0,
+          exp: "School policies should encourage verified, transparent, and ethically cited usage."
+        }
+      },
+      {
+        ar: {
+          q: "تعتبر العلاقة بين الذكاء الاصطناعي والتعلم الآلي والتعلم العميق والذكاء التوليدي علاقة:",
+          opts: ["تقنيات متنافرة تلغي بعضها بعضاً", "فئات متداخلة ومترابطة تندرج من الأوسع إلى الأخص", "أنظمة قديمة تم استبدالها بالكامل", "دوائر كهربية ميكانيكية لا تعتمد على البرمجة"],
+          ans: 1,
+          exp: "يوضح كتاب الوزارة أنها علاقة فئات متداخلة ومترابطة وليست تقنيات منفصلة أو متنافسة."
+        },
+        en: {
+          q: "The conceptual relationship among AI, ML, DL, and Generative AI is best characterized as:",
+          opts: ["Mutually exclusive competing technologies", "Interconnected nested concentric categories ranging from broad to specialized", "Obsolescent hardware superseded by mechanical relays", "Non-digital mechanical circuits"],
+          ans: 1,
+          exp: "The curriculum defines them as nested and interrelated subsets rather than isolated tools."
+        }
+      },
+
+      // --- المجموعة الثالثة (الأسئلة 51 - 75) ---
+      {
+        ar: {
+          q: "ما الوظيفة الأساسية للترانزستور في المعالجات والدوائر الرقمية الحديثة؟",
+          opts: ["توليد تيار تبريد هوائي", "تخزين الملفات الورقية", "مفتاح إلكتروني ثنائي للتحكم في تدفق التيار", "تحويل الحواسيب إلى شاشات عرض ملونة"],
+          ans: 2,
+          exp: "يعمل الترانزستور كمفتاح كهربائي فائق السرعة يتحكم في تدفق التيار لتمثيل 0 و 1."
+        },
+        en: {
+          q: "What is the primary function of a transistor in modern processors and digital circuits?",
+          opts: ["Generating ambient airflow cooling", "Filing physical paper documents", "Binary electronic switch regulating current flow", "Converting terminals to color monitors"],
+          ans: 2,
+          exp: "Transistors function as microscopic high-speed switches representing binary logic."
+        }
+      },
+      {
+        ar: {
+          q: "منصة تتيح للمستخدمين التواصل ونشر المحتوى والتفاعل السريع بين الأفراد تُعرف بـ:",
+          opts: ["الحوسبة الطرفية", "البرمجة الإجرائية", "المعالجة المتوازية", "شبكات التواصل الاجتماعي"],
+          ans: 3,
+          exp: "شبكات التواصل الاجتماعي (SNS) منصات تتيح نشر المحتوى ومشاركته والتواصل الفوري عالمياً."
+        },
+        en: {
+          q: "A platform allowing users to communicate, broadcast content, and interact instantaneously is:",
+          opts: ["Edge Computing", "Procedural Logic", "Parallel Processing", "Social Media Networks (SNS)"],
+          ans: 3,
+          exp: "Social media networks connect users globally for rapid media sharing and interaction."
+        }
+      },
+      {
+        ar: {
+          q: "تقديم الدروس والمحاضرات والواجبات والاختبارات عبر منصات الويب وشبكة الإنترنت يُمثل:",
+          opts: ["التعلم عبر الإنترنت", "التجارة التقليدية", "الحوسبة الطرفية", "التصنيع الميكانيكي"],
+          ans: 0,
+          exp: "التعلم عبر الإنترنت (Online Learning) نمط تعليمي تُقدم فيه المواد والاختبارات عبر الإنترنت."
+        },
+        en: {
+          q: "Delivering classroom lessons, coursework, and assessments via internet web platforms represents:",
+          opts: ["Online Learning", "Conventional Commerce", "Edge Computing", "Mechanical Fabrication"],
+          ans: 0,
+          exp: "Online learning provides interactive educational curricula and remote evaluation."
+        }
+      },
+      {
+        ar: {
+          q: "أي الخصائص الآتية تُميز المعالجة المتوازية عن المعالجة التسلسلية الكلاسيكية؟",
+          opts: ["الاعتماد على مسار واحد وبطيء", "تقسيم المهام وتنفيذها بالتزامن عبر عدة أنوية", "إيقاف عمل الشاشة لتوفير الطاقة", "العمل بدون نظام تشغيل"],
+          ans: 1,
+          exp: "المعالجة المتوازية تنجز العمليات الحسابية بالتزامن عبر أنوية متعددة لتوفير الوقت وزيادة الكفاءة."
+        },
+        en: {
+          q: "Which characteristic differentiates parallel processing from classical serial execution?",
+          opts: ["Relying on a single bottleneck pipeline", "Dividing workloads across multiple cores simultaneously", "Disabling displays to conserve battery", "Operating without an OS layer"],
+          ans: 1,
+          exp: "Parallel processing partitions computational workloads across concurrent processing units."
+        }
+      },
+      {
+        ar: {
+          q: "ماذا يحدث للكيوبت الكمومي عند قياسه وملاحظته فيزيائياً أثناء التجربة الحوسبية؟",
+          opts: ["يتلاشى ويختفي تماماً", "يتحول إلى رقم عشري لا نهائي", "تنهار حالته التراكبية إلى قيمة ثنائية كلاسيكية محددة إما 0 أو 1", "يتحول إلى غاز مبرد"],
+          ans: 2,
+          exp: "عملية القياس والملاحظة تجبر الكيوبت الكمومي على الانهيار لإحدى الحالتين الكلاسيكيتين (0 أو 1)."
+        },
+        en: {
+          q: "What happens to a quantum qubit upon physical measurement during computation?",
+          opts: ["It vanishes from physical reality", "It turns into an infinite decimal fraction", "Its superposition collapses into a deterministic classical state: 0 or 1", "It transforms into coolant gas"],
+          ans: 2,
+          exp: "Measurement collapses the superposition wave function into a single basis state."
+        }
+      },
+      {
+        ar: {
+          q: "أي العوامل الآتية يمثل دافعاً أساسياً لتبني الشركات الناشئة لخدمات الحوسبة السحابية؟",
+          opts: ["شراء مباني ضخمة لحفظ الخوادم", "إلغاء اتصال الإنترنت بالكامل", "الاستغناء عن تأمين البيانات", "التحول إلى نموذج الدفع مقابل الاستخدام الفعلي وتوفير تكاليف البنية التحتية"],
+          ans: 3,
+          exp: "توفر السحابة مرونة اقتصادية بتجنب شراء خوادم باهظة واعتماد نموذج الدفع حسب الاستهلاك."
+        },
+        en: {
+          q: "Which factor acts as a primary motivator for startups adopting cloud computing services?",
+          opts: ["Purchasing massive server warehouses", "Eliminating internet access entirely", "Abolishing data security protocols", "Transitioning to a pay-as-you-go model and lowering capital infrastructure costs"],
+          ans: 3,
+          exp: "Cloud shifts heavy upfront infrastructure capital expenditure to elastic operating costs."
+        }
+      },
+      {
+        ar: {
+          q: "عندما تُعطى خوارزمية التعلم الآلي ملايين الرسائل القديمة لتفادي الرسائل الاحتيالية، فإنها تبحث عن:",
+          opts: ["الأنماط والسمات المشتركة الدالة على الرسائل المزعجة", "أسماء المبرمجين الذين كتبوا نظام التشغيل", "سرعة استهلاك بطارية الهاتف", "سعر جهاز الحاسوب في السوق"],
+          ans: 0,
+          exp: "تكتشف الخوارزمية ذاتياً الأنماط والكلمات المشبوهة التي تميز رسائل Spam وتحجبها تلقائياً."
+        },
+        en: {
+          q: "When a machine learning algorithm ingests millions of past emails to prevent fraud, it seeks:",
+          opts: ["Shared statistical patterns and features characteristic of spam", "Names of system kernel developers", "Mobile battery draw metrics", "Retail prices of client computers"],
+          ans: 0,
+          exp: "The model discovers correlations and structural patterns separating spam from legitimate mail."
+        }
+      },
+      {
+        ar: {
+          q: "تعتبر الرؤية الحاسوبية وقراءة لوحات أرقام السيارات آلياً في الطرق السريعة تطبيقاً على:",
+          opts: ["الحوسبة الميكانيكية القديمة", "الذكاء الاصطناعي", "برامج معالجة النصوص المكتبية", "الحوسبة الطرفية التناظرية"],
+          ans: 1,
+          exp: "الرؤية الحاسوبية فرع أصيل من الذكاء الاصطناعي يحاكي قدرة الإنسان على الإبصار وفهم الصور."
+        },
+        en: {
+          q: "Computer vision and automated license plate recognition on highways exemplify:",
+          opts: ["Legacy mechanical computing", "Artificial Intelligence", "Office word processing utilities", "Analog edge processing"],
+          ans: 1,
+          exp: "Computer vision is an AI domain that processes, analyzes, and interprets visual inputs."
+        }
+      },
+      {
+        ar: {
+          q: "لماذا يُطلق على أنظمة مثل الشطرنج الآلي أو مترجم النصوص وصف «الذكاء الاصطناعي ضيق النطاق»؟",
+          opts: ["لأنها تعمل فقط على شاشات صغيرة جداً", "لأنها تحتاج إلى كهرباء منخفضة التردد", "لأنها مصممة لإتقان مهمة واحدة محددة دون امتلاك وعي عام شامل", "لأنها تفشل دائماً في أداء مهامها"],
+          ans: 2,
+          exp: "الذكاء الضيق مخصص لإتقان مهمة واحدة محددة بكفاءة عالية دون القدرة على التفكير العام."
+        },
+        en: {
+          q: "Why are systems like chess engines or translators termed 'Narrow AI'?",
+          opts: ["Because they only operate on compact displays", "Because they require low-voltage current", "Because they master a single specific objective without possessing general consciousness", "Because they routinely fail at tasks"],
+          ans: 2,
+          exp: "Narrow AI excels in specialized domain-specific tasks without broader awareness."
+        }
+      },
+      {
+        ar: {
+          q: "المساعدات الصوتية مثل Siri ومساعد Google تفهم صوت المستخدم وتحوله لنصوص من خلال تقنيات:",
+          opts: ["الصمامات المفرغة", "البرمجة الإجرائية الثابتة", "التبديل الميكانيكي اليدوي", "التعرف على الصوت والكلام المدعوم بالذكاء الاصطناعي"],
+          ans: 3,
+          exp: "تعتمد المساعدات الصوتية على معالجة الكلام وخوارزميات الذكاء الاصطناعي لتحويل الصوت إلى أوامر."
+        },
+        en: {
+          q: "Voice assistants like Siri and Google Assistant parse spoken commands into text utilizing:",
+          opts: ["Vacuum tubes", "Rigid procedural coding", "Manual mechanical toggles", "AI-powered speech recognition"],
+          ans: 3,
+          exp: "Voice assistants apply AI acoustic and linguistic processing to interpret speech."
+        }
+      },
+      {
+        ar: {
+          q: "أي مما يلي يُعد مثالاً على نظام ذكاء اصطناعي توليدي مخصص لتوليد الأكواد وتصحيحها ومحادثة المستخدم؟",
+          opts: ["روبوت المحادثة ChatGPT", "مرشح البريد العشوائي", "نظام تشغيل DOS القديم", "أداة فحص القرص الصلب"],
+          ans: 0,
+          exp: "روبوتات المحادثة التوليدية مثل ChatGPT و Gemini تُنشئ نصوصاً وتكتب أكواداً وتصححها."
+        },
+        en: {
+          q: "Which of the following is an example of a generative AI system used for code synthesis and chat?",
+          opts: ["ChatGPT Conversational Agent", "Spam Mail Filter", "Legacy DOS Operating System", "Hard Drive Scan Utility"],
+          ans: 0,
+          exp: "Generative chatbots like ChatGPT synthesize natural language responses and code."
+        }
+      },
+      {
+        ar: {
+          q: "ما هو الترتيب التدريجي الصحيح لمعالجة البيانات داخل الشبكة العصبية المخصصة للتعرف على الوجوه؟",
+          opts: ["ملامح الوجه ثم الحواف ثم بكسلات خام", "بكسلات خام ثم حواف وخطوط ثم ملامح مجمعة ثم قرار نهائي", "القرار النهائي أولاً ثم تحليل الألوان", "طبقة واحدة فورية بدون طبقات"],
+          ans: 1,
+          exp: "تتدرج الشبكة من البكسلات الخام في البداية، ثم تستخلص الحواف، ثم الملامح، وصولاً للقرار."
+        },
+        en: {
+          q: "What is the correct hierarchical pipeline inside a face recognition deep neural network?",
+          opts: ["Facial features, then line edges, then raw pixels", "Raw pixels, then edges and lines, then composite facial contours, then final prediction", "Final decision first, then color decoding", "Single-layer pass with no intermediate stages"],
+          ans: 1,
+          exp: "Deep networks progressively learn from low-level edges to composite object features."
+        }
+      },
+      {
+        ar: {
+          q: "عند تدريب شبكة عصبية اصطناعية، كيف تنخفض نسبة الخطأ في مخرجاتها تدريجياً؟",
+          opts: ["بزيادة حجم الشاشة الخارجية", "عن طريق إيقاف تشغيل الخادم", "بتعديل وضبط أوزان الروابط العصبية ذاتياً بناءً على نتائج التدريب", "بتقليل عدد الصور إلى صورة واحدة"],
+          ans: 2,
+          exp: "يعدل النموذج الأوزان (Weights) تكرارياً عبر خوارزميات التدريب لتقليص الفارق بين التوقع والواقع."
+        },
+        en: {
+          q: "During neural network training, how is output error systematically reduced?",
+          opts: ["By expanding display monitor dimensions", "By shutting down the cluster server", "By iteratively tuning synaptic connection weights based on training feedback", "By reducing image count to a single sample"],
+          ans: 2,
+          exp: "Optimization algorithms adjust connection weights iteratively to minimize loss."
+        }
+      },
+      {
+        ar: {
+          q: "إذا سألت نموذج ذكاء اصطناعي عن مرجع علمي فاخترع اسم مؤلف ومجلة غير موجودة بأسلوب واثق، فهذا مثال على:",
+          opts: ["الأمان السيبراني المتكامل", "التشفير الكمومي", "المعالجة المتوازية", "الهلوسة في نماذج الذكاء الاصطناعي"],
+          ans: 3,
+          exp: "اختلاق مراجع أو أحداث وهمية بأسلوب مقنع وواثق هو الصورة النمطية لظاهرة الهلوسة."
+        },
+        en: {
+          q: "If an AI model invents a fake paper title and nonexistent journal with supreme confidence, it exemplifies:",
+          opts: ["Integrated Cybersecurity", "Quantum Encryption", "Parallel Processing", "AI Model Hallucination"],
+          ans: 3,
+          exp: "Fabricating nonexistent scholarly references convincingly is a classic hallucination manifestation."
+        }
+      },
+      {
+        ar: {
+          q: "في واقعة نيويورك القضائية الشهيرة عام 2023، تعرض محامٍ للمساءلة القانونية بسبب:",
+          opts: ["تقديمه مذكرات تتضمن سوابق وأحكاماً قضائية وهمية اختلقها الذكاء الاصطناعي", "استخدامه حاسوباً قديماً من الأربعينيات", "عدم اتصاله بشبكة الإنترنت", "إرساله رسائل بريد عشوائية"],
+          ans: 0,
+          exp: "اعتمد المحامي على أداة ذكاء اصطناعي لخصت له قضايا وهمية هلوس بها النموذج وقدمها للمحكمة."
+        },
+        en: {
+          q: "In the notable 2023 New York legal incident, an attorney faced court sanctions for:",
+          opts: ["Submitting legal briefs with fictitious citations hallucinated by AI", "Operating a 1940s vintage terminal", "Failing to connect to the Internet", "Sending bulk spam emails"],
+          ans: 0,
+          exp: "The lawyer submitted fabricated case precedents synthesized by a generative model."
+        }
+      },
+      {
+        ar: {
+          q: "البيانات التي تم تصنيفها مسبقاً بعناية (مثل تحديد أوراق النبات السليمة والمصابة) تُعرف بـ:",
+          opts: ["البيانات العشوائية", "البيانات الموسومة أو المصنفة", "البيانات المشفرة بالكيوبت", "بيانات الصمامات"],
+          ans: 1,
+          exp: "البيانات الموسومة (Labeled Data) هي بيانات تحتوي مسبقاً على التصنيف الصحيح لتدريب النموذج."
+        },
+        en: {
+          q: "Datasets that have been annotated with target ground truth (such as healthy vs. diseased leaves) are:",
+          opts: ["Random Data", "Labeled Data", "Qubit Encrypted Data", "Thermionic Data"],
+          ans: 1,
+          exp: "Supervised models require labeled datasets where each sample is tagged with truth labels."
+        }
+      },
+      {
+        ar: {
+          q: "ما الأثر المترتب على تغذية نموذج التعلم الآلي ببيانات تدريب تفتقر للتنوع؟",
+          opts: ["زيادة سرعة المعالج تلقائياً", "انخفاض استهلاك الطاقة الكهربائية", "فشل النموذج عند اختبار بيانات من ظروف واقعية جديدة", "تحول النظام لذكاء اصطناعي عام"],
+          ans: 2,
+          exp: "ضعف تنوع بيانات التدريب يؤدي لضعف التعميم وارتكاب النموذج لأخطاء فادحة في الواقع."
+        },
+        en: {
+          q: "What is the consequence of feeding a machine learning model poorly diversified training data?",
+          opts: ["Automatic overclocking of processors", "Lower electrical power consumption", "Model failure when encountering novel real-world deployment conditions", "Spontaneous emergence of general intelligence"],
+          ans: 2,
+          exp: "Lack of diversity causes poor generalization on unseen operational conditions."
+        }
+      },
+      {
+        ar: {
+          q: "أي المهام التالية يتفوق فيها الذكاء الاصطناعي التوليدي مقارنة بأنظمة التصنيف التقليدية؟",
+          opts: ["توصيل كابلات الكهرباء", "إصلاح الأجهزة الميكانيكية", "حساب سرعة دوران المراوح", "صياغة مقال إبداعي أصيل أو تأليف شعر أو توليد صورة جديدة"],
+          ans: 3,
+          exp: "يتميز الذكاء التوليدي بقدرته على إنشاء محتوى جديد كلياً وليس مجرد تصنيف البيانات الموجودة."
+        },
+        en: {
+          q: "In which of the following tasks does Generative AI excel over traditional classification models?",
+          opts: ["Patching electrical wiring", "Repairing automotive transmissions", "Measuring cooling fan RPM", "Synthesizing creative essays, poems, or original artwork"],
+          ans: 3,
+          exp: "Generative systems create novel, expressive digital media rather than mere class scoring."
+        }
+      },
+      {
+        ar: {
+          q: "تعتمد أدوات توليد الفن مثل Midjourney على خوارزميات التعلم العميق وتحديداً نماذج تُعرف بنماذج:",
+          opts: ["الانتشار والشبكات العميقة", "الصمامات المفرغة", "البتات الثنائية الخطية", "قواعد البيانات البسيطة"],
+          ans: 0,
+          exp: "تعتمد مولدات الصور الحديثة على نماذج الانتشار (Diffusion Models) المبنية فوق التعلم العميق."
+        },
+        en: {
+          q: "Art generation utilities like Midjourney rely on deep learning algorithms, specifically:",
+          opts: ["Diffusion and deep neural models", "Thermionic tube arrays", "Linear binary logic circuits", "Flat database structures"],
+          ans: 0,
+          exp: "Modern generative art utilizes deep latent diffusion architectures conditioned on prompts."
+        }
+      },
+      {
+        ar: {
+          q: "ما الفائدة التي يجنيها المعلم عند توظيف الذكاء الاصطناعي التوليدي كأداة مساعدة في التحضير؟",
+          opts: ["إلغاء الحضور في المدرسة", "سرعة استلهام أفكار جديدة للأنشطة والتمارين والتقييمات المتنوعة", "منع الطلاب من حل الواجبات", "إيقاف تدريس المناهج"],
+          ans: 1,
+          exp: "يساعد الذكاء الاصطناعي المعلم في العصف الذهني وتصميم أفكار تدريسية متجددة بكفاءة."
+        },
+        en: {
+          q: "What pedagogical benefit does an educator gain from utilizing Generative AI for lesson planning?",
+          opts: ["Eliminating in-person classroom attendance", "Rapid brainstorming of fresh classroom activities, exercises, and assessments", "Preventing students from homework tasks", "Discontinuing formal curricula"],
+          ans: 1,
+          exp: "Generative tools assist teachers in structuring novel instructional materials quickly."
+        }
+      },
+      {
+        ar: {
+          q: "ما المخاطرة الأساسية التي تواجه الطالب عند اعتماده الكلي على مخرجات الذكاء الاصطناعي دون مراجعة؟",
+          opts: ["زيادة سرعة الكتابة", "تحسين مهارات الخط اليدوي", "تلقي معلومات مضللة وضمور مهارة التفكير النقدي لديه", "تلف شاشة الهاتف الذكي"],
+          ans: 2,
+          exp: "الاعتماد الأعمى يعرض الطالب لمعلومات مغلوطة بسبب الهلوسة ويضعف قدرته على التفكير المستقل."
+        },
+        en: {
+          q: "What is the primary risk for a student who relies blindly on AI outputs without review?",
+          opts: ["Accelerated typing speed", "Refining cursive penmanship", "Absorbing misinformation and stunting critical analytical faculties", "Damaging smartphone display hardware"],
+          ans: 2,
+          exp: "Blind adoption fosters reliance on hallucinations and degrades critical reasoning skills."
+        }
+      },
+      {
+        ar: {
+          q: "أي المكونات التالية لا يُعد من طبقات الشبكة العصبية الاصطناعية المذكورة في الكتاب؟",
+          opts: ["طبقة الإدخال", "الطبقات المخفية", "طبقة الإخراج", "طبقة التبريد المائي الكيميائي"],
+          ans: 3,
+          exp: "تتكون الشبكة العصبية من ثلاث طبقات برمجية رئيسية: الإدخال، المخفية، والإخراج."
+        },
+        en: {
+          q: "Which of the following is NOT one of the neural network layers outlined in the textbook?",
+          opts: ["Input Layer", "Hidden Layers", "Output Layer", "Chemical Water-Cooling Layer"],
+          ans: 3,
+          exp: "Neural architectures consist of input, hidden, and output processing layers."
+        }
+      },
+      {
+        ar: {
+          q: "تعتمد نماذج التوليد اللغوي على التنبؤ الإحصائي بـ:",
+          opts: ["الكلمة أو العنصر التالي الأكثر احتمالاً في السياق", "درجة حرارة الطقس لليوم التالي حصراً", "سرعة حركة الإلكترونات داخل السلك", "سعر صرف العملات الأجنبية حصراً"],
+          ans: 0,
+          exp: "تعتمد النماذج اللغوية الكبيرة على توقع الرمز أو الكلمة التالية استناداً لاحتمالات السياق اللغوي."
+        },
+        en: {
+          q: "Generative language models operate computationally by statistically predicting:",
+          opts: ["The most probable next token or word within context", "Exclusively tomorrow's weather temperature", "Electron velocity inside transmission wires", "Exclusively global currency exchange rates"],
+          ans: 0,
+          exp: "LLMs are probabilistic token prediction engines trained across massive text corpora."
+        }
+      },
+      {
+        ar: {
+          q: "عندما تطلب من مساعد الذكاء الاصطناعي تلخيص درس، فإن وظيفته هنا تُصنف ضمن معالجة:",
+          opts: ["الرسومات ثلاثية الأبعاد فقط", "اللغات الطبيعية وتوليد النصوص", "الفيزياء الميكانيكية", "ميكانيكا الموائع"],
+          ans: 1,
+          exp: "تلخيص النصوص وفهمها وصياغتها يندرج تحت فرع معالجة اللغات الطبيعية (NLP) وتوليد النصوص."
+        },
+        en: {
+          q: "When asking an AI assistant to summarize a chapter, the task falls under:",
+          opts: ["3D rendering exclusively", "Natural Language Processing (NLP) and text generation", "Classical mechanical physics", "Fluid dynamics simulation"],
+          ans: 1,
+          exp: "Text summarization leverages Natural Language Processing and text generation."
+        }
+      },
+      {
+        ar: {
+          q: "تصف كتب الوزارة العلاقة الهندسية لمفاهيم الذكاء الاصطناعي بأن الذكاء الاصطناعي التوليدي يقع:",
+          opts: ["خارج دائرة الذكاء الاصطناعي بالكامل", "كنواة تخصصية عميقة تعتمد في غالبيتها على نماذج التعلم العميق", "بين الصمامات المفرغة والبتات الكلاسيكية", "كمجال مستقل يرفض التعلم الآلي"],
+          ans: 1,
+          exp: "الذكاء الاصطناعي التوليدي مبني فوق معمارية التعلم العميق ويشكل التطبيق الأكثر تخصصاً."
+        },
+        en: {
+          q: "The curriculum's conceptual layout positions modern Generative AI as:",
+          opts: ["Existing completely outside the AI sphere", "A specialized core built predominantly atop deep learning foundations", "Bridging vacuum tubes and binary bits", "An autonomous field rejecting machine learning"],
+          ans: 1,
+          exp: "Modern GenAI represents a specialized subdomain leveraging deep learning representations."
+        }
+      },
+
+      // --- المجموعة الرابعة (الأسئلة 76 - 100) ---
+      {
+        ar: {
+          q: "في أي عقد من القرن العشرين ظهر أول حاسوب إلكتروني رقمي مبرمج لأغراض عسكرية وحسابية؟",
+          opts: ["السبعينيات", "التسعينيات", "الأربعينيات", "العقد الأول من الألفية"],
+          ans: 2,
+          exp: "ظهرت الحواسيب الأولى مثل ENIAC في فترة الأربعينيات لأغراض عسكرية وعلمية."
+        },
+        en: {
+          q: "In which 20th-century decade did the first digital electronic computers emerge for ballistics?",
+          opts: ["1970s", "1990s", "1940s", "2000s"],
+          ans: 2,
+          exp: "Early electronic mainframes like ENIAC were developed in the 1940s."
+        }
+      },
+      {
+        ar: {
+          q: "التحول الذي مكن الأفراد من إنجاز المهام المكتبية في المنازل بدلاً من الذهاب لمقر العمل هو:",
+          opts: ["التجارة المباشرة", "التعلم الصفي", "الحوسبة الميكانيكية", "العمل عن بعد"],
+          ans: 3,
+          exp: "العمل عن بعد (Remote Work) أتاح للموظفين إنجاز مهامهم من أي مكان عبر الإنترنت."
+        },
+        en: {
+          q: "The societal shift enabling personnel to complete corporate office duties from home is:",
+          opts: ["In-person commerce", "Traditional classroom study", "Mechanical calculating", "Remote Work"],
+          ans: 3,
+          exp: "Remote work allows professionals to conduct duties offsite via telecommunications."
+        }
+      },
+      {
+        ar: {
+          q: "تعتمد الحواسيب الحديثة على وحدات متخصصة لمعالجة رسوميات والعمليات المتوازية للذكاء الاصطناعي تسمى:",
+          opts: ["معالجات الرسومات NPUs و GPUs", "الصمامات المفرغة", "الأسلاك اليدوية النحاسية", "الآلات الكاتبة"],
+          ans: 0,
+          exp: "تعتمد معالجة الذكاء الاصطناعي والرسوميات على معالجات متخصصة مثل GPUs و NPUs."
+        },
+        en: {
+          q: "Modern computing hardware accelerates AI workloads using specialized parallel chips called:",
+          opts: ["GPUs and NPUs", "Thermionic valves", "Manual copper jumpers", "Mechanical typewriters"],
+          ans: 0,
+          exp: "Graphics Processing Units (GPUs) and Neural Processing Units (NPUs) accelerate neural math."
+        }
+      },
+      {
+        ar: {
+          q: "تتميز منصات التجارة الإلكترونية بأنها وفرت للمشروعات المنزلية الصغيرة ميزة:",
+          opts: ["إلغاء التعامل مع البنوك", "الوصول لجمهور واسع دون تحمل تكاليف استئجار متاجر فعلية باهظة", "منع استخدام الشحن والتوصيل", "حظر الدفع الإلكتروني"],
+          ans: 1,
+          exp: "مكنت التجارة الإلكترونية صغار المنتجين من تسويق منتجاتهم عبر الإنترنت بتكاليف منخفضة."
+        },
+        en: {
+          q: "A key advantage e-commerce platforms offer domestic home-based small businesses is:",
+          opts: ["Eliminating banking institutions", "Reaching a broad audience without costly physical storefront leases", "Banning shipping couriers", "Prohibiting online digital payments"],
+          ans: 1,
+          exp: "Digital marketplaces democratized distribution without high retail real estate costs."
+        }
+      },
+      {
+        ar: {
+          q: "إذا قارنا البت التقليدي بمصباح كهربائي (مضاء أو مطفأ)، فإن الكيوبت الكمي يمكن تشبيهه بـ:",
+          opts: ["سلك مقطوع تماماً", "مفتاح جداري تقليدي مغلق", "كرة تدور وتتجه لأي نقطة على سطحها في فضاء احتمالي", "شمعة منطفئة"],
+          ans: 2,
+          exp: "يمثل الكيوبت حالة احتمالية متعددة الاتجاهات في كرة بلوخ ثلاثية الأبعاد."
+        },
+        en: {
+          q: "Comparing a classical bit to a toggle switch (ON/OFF), a quantum qubit resembles:",
+          opts: ["A severed copper cable", "A closed single toggle", "A sphere pointing to any continuous point across its surface", "An extinguished candle"],
+          ans: 2,
+          exp: "A qubit exists across a continuous probabilistic state space mapped on the Bloch sphere."
+        }
+      },
+      {
+        ar: {
+          q: "ما التحدي الذي يهدد استمرار تضاعف الترانزستورات وفق قانون مور عند الوصول للمقاييس الذرية؟",
+          opts: ["رخص أسعار السيليكون", "عدم رغبة الناس بالسرعة", "زيادة سعة بطاريات الهواتف", "التأثيرات الكمومية كالنفق الكمومي وصعوبة تبديد الحرارة العالية"],
+          ans: 3,
+          exp: "تتسبب الظواهر الكمومية وتيارات التسرب الحراري في وضع عوائق فيزيائية أمام قانون مور."
+        },
+        en: {
+          q: "What physical barrier limits relentless transistor miniaturization under Moore's Law?",
+          opts: ["Plummeting silicon market prices", "Lack of consumer demand for speed", "Expanding battery storage capacity", "Quantum tunneling phenomena and severe thermal dissipation limits"],
+          ans: 3,
+          exp: "Atomic-scale tunneling and thermal dissipation impose boundaries on classical scaling."
+        }
+      },
+      {
+        ar: {
+          q: "لماذا تدمج الشركات الذكاء الاصطناعي في كاميرات المراقبة بالمدن الذكية؟",
+          opts: ["للتعرف الفوري على السيارات وتتبع الحركة وإحصاء المشاة دون تدخل يدوي مستمر", "لتوليد مقاطع موسيقية للمارة", "لإيقاف عمل إشارات المرور", "لتقليل دقة التصوير"],
+          ans: 0,
+          exp: "يساعد الذكاء الاصطناعي في تحليل مشاهد الفيديو ورصد المركبات وإدارة المرور ذاتياً."
+        },
+        en: {
+          q: "Why do smart city authorities integrate AI vision algorithms into municipal cameras?",
+          opts: ["Automated vehicle tracking, motion analysis, and pedestrian counts without human delays", "Synthesizing background music for streets", "Deactivating traffic intersections", "Degrading video resolution"],
+          ans: 0,
+          exp: "Vision systems provide automated situational awareness and traffic telemetry."
+        }
+      },
+      {
+        ar: {
+          q: "البرمجة التي تعتمد على كتابة قواعد صارمة وشروط (If... Then) لكل احتمال تُسمى:",
+          opts: ["التعلم العميق", "البرمجة التقليدية", "الذكاء التوليدي", "الحوسبة الكمومية"],
+          ans: 1,
+          exp: "البرمجة الكلاسيكية تقوم على كتابة تعليمات وقواعد شرطية واضحة ومسبقة لكل خطوة."
+        },
+        en: {
+          q: "Software engineering relying on hardcoding explicit logic rules (If... Then) is termed:",
+          opts: ["Deep Learning", "Traditional Programming", "Generative AI", "Quantum Computing"],
+          ans: 1,
+          exp: "Traditional programming encodes deterministic rules to compute outputs from data."
+        }
+      },
+      {
+        ar: {
+          q: "تطبيق ذكاء اصطناعي يقوم بتحويل مقال صحفي مكتوب إلى تسجيل صوتي بنبرة بشرية معبرة يُعد مثالاً على:",
+          opts: ["الحوسبة الطرفية فقط", "مرشحات الرسائل المزعجة", "توليد الصوت بالذكاء الاصطناعي التوليدي", "الصمامات المفرغة"],
+          ans: 2,
+          exp: "توليد الأصوات الطبيعية هو أحد تطبيقات الذكاء الاصطناعي التوليدي المعاصر."
+        },
+        en: {
+          q: "An AI system synthesizing realistic human narration from an editorial article exemplifies:",
+          opts: ["Edge Computing exclusively", "Spam Mail Filters", "Generative AI Speech Synthesis", "Thermionic Valves"],
+          ans: 2,
+          exp: "Voice cloning and text-to-speech synthesis fall directly under Generative AI."
+        }
+      },
+      {
+        ar: {
+          q: "ما الميزة الأساسية لاستخدام مرشحات البريد المعتمدة على التعلم الآلي بدلاً من القواعد الثابتة؟",
+          opts: ["توقفها عن العمل عند وصول إعلانات جديدة", "صعوبة تشغيلها على الحواسيب", "حذف كافة الرسائل دون تمييز", "قدرتها على التكيف الذاتي واكتشاف أساليب الاحتيال المتطورة باستمرار"],
+          ans: 3,
+          exp: "يتعلم النموذج باستمرار من الأنماط الجديدة لرسائل الاحتيال دون انتظار تحديث يدوي للكود."
+        },
+        en: {
+          q: "What is the key advantage of machine-learning-based spam filters over hardcoded keyword lists?",
+          opts: ["Crashing whenever new marketing arrives", "Excessive difficulty running on clients", "Indiscriminately deleting all inboxes", "Self-adapting to novel emerging phishing tactics continuously"],
+          ans: 3,
+          exp: "Statistical learning models adapt dynamically to adversarial shifts in spam patterns."
+        }
+      },
+      {
+        ar: {
+          q: "عندما يفحص الطبيب صور الأشعة بمساعدة الذكاء الاصطناعي، فإن القرار الطبي النهائي يجب أن يتخذه:",
+          opts: ["الطبيب البشري المتخصص لضمان الدقة وتحمل المسؤولية", "خوارزمية الذكاء الاصطناعي بمفردها", "الشركة التي صنعت جهاز الأشعة", "برنامج تصفح الإنترنت"],
+          ans: 0,
+          exp: "يعمل الذكاء الاصطناعي كأداة دعم استشاري، بينما يبقى القرار الطبي النهائي للطبيب البشري."
+        },
+        en: {
+          q: "When a physician screens radiography assisted by AI, the final clinical diagnostic judgment rests with:",
+          opts: ["The specialist human physician to ensure clinical accuracy and accountability", "The AI algorithm autonomously", "The radiography hardware vendor", "The web browser utility"],
+          ans: 0,
+          exp: "Clinical accountability demands human-in-the-loop oversight for patient diagnoses."
+        }
+      },
+      {
+        ar: {
+          q: "أي مما يلي يُعد دليلاً على حدوث الهلوسة في روبوت محادثة توليدي؟",
+          opts: ["الإجابة بسرعة عن مسألة رياضية بسيطة", "ذكر وقائع خيالية وأسماء علماء غير حقيقيين بصيغة جازمة ومؤكدة", "الاعتراف بعدم توفر المعلومة لديه", "ترجمة كلمة من الإنجليزية إلى العربية بدقة"],
+          ans: 1,
+          exp: "تتجلى الهلوسة عندما يؤلف النظام وقائع وهمية ويسردها بأسلوب واثق ومقنع."
+        },
+        en: {
+          q: "Which behavior indicates an AI hallucination within a generative conversational agent?",
+          opts: ["Rapidly answering a basic math addition", "Asserting fictional events and synthetic scientist biographies authoritatively", "Stating that information is unavailable", "Translating a vocabulary term correctly"],
+          ans: 1,
+          exp: "Hallucinations manifest when models fabricate plausible-sounding factual assertions."
+        }
+      },
+      {
+        ar: {
+          q: "في شبكات التواصل الاجتماعي، تتولى خوارزميات التعلم الآلي مهمة:",
+          opts: ["إلغاء اتصال الإنترنت عن المستخدم", "تخفيض إضاءة شاشة الهاتف", "ترشيح المنشورات ومقاطع الفيديو التي تطابق اهتمامات المستخدم", "طباعة المنشورات على ورق"],
+          ans: 2,
+          exp: "تستخدم منصات التواصل خوارزميات تعلم آلي لتخصيص الخلاصات وترشيح ما يلائم كل مستخدم."
+        },
+        en: {
+          q: "In social media networks, machine learning algorithms are primarily responsible for:",
+          opts: ["Disconnecting network data lines", "Dimming smartphone screen backlights", "Ranking and recommending posts aligned with user engagement patterns", "Printing timelines onto paper"],
+          ans: 2,
+          exp: "Recommendation ranking algorithms optimize content feeds based on user affinity models."
+        }
+      },
+      {
+        ar: {
+          q: "ماذا يقصد بمصطلح (Prompt Engineering) أو صياغة الأوامر التوجيهية في الذكاء الاصطناعي التوليدي؟",
+          opts: ["إصلاح الأسلاك النحاسية بالمعالج", "تركيب كروت الشاشة في الحاسوب", "مسح الفيروسات من القرص الصلب", "كتابة تعليمات دقيقة ومحددة لتوجيه النموذج لإنتاج المخرج المطلوب بأعلى جودة"],
+          ans: 3,
+          exp: "صياغة الأوامر تعني هندسة النص المدخل للنموذج للحصول على أفضل مخرجات ممكنة."
+        },
+        en: {
+          q: "What is meant by 'Prompting' or 'Prompt Engineering' in Generative AI?",
+          opts: ["Soldering copper traces on microchips", "Mounting GPU cards on motherboards", "Scanning drives for trojan malware", "Crafting precise contextual inputs to guide models toward targeted high-quality generations"],
+          ans: 3,
+          exp: "Prompting refers to designing clear, structured instructions to steer generative synthesis."
+        }
+      },
+      {
+        ar: {
+          q: "تحتاج أنظمة التعرف على الوجوه في الهواتف الذكية إلى معالجة جزء من البيانات محلياً بالهاتف بهدف:",
+          opts: ["سرعة الاستجابة لفتح القفل وحماية خصوصية بيانات الوجه الحيوية", "منع استخدام الشاحن الكهربائي", "إلغاء الاتصال بشبكة الواي فاي", "زيادة وزن الهاتف"],
+          ans: 0,
+          exp: "المعالجة الطرفية بالهاتف تضمن فتح القفل فوراً وتمنع إرسال بصمة الوجه عبر الإنترنت حفاظاً على الخصوصية."
+        },
+        en: {
+          q: "Smartphone face authentication processes biometric features on device locally to ensure:",
+          opts: ["Instant unlock latency and robust biometric privacy protection", "Preventing the use of power chargers", "Terminating local Wi-Fi capabilities", "Increasing physical device mass"],
+          ans: 0,
+          exp: "Local neural hardware handles biometrics to preserve privacy and minimize unlock latency."
+        }
+      },
+      {
+        ar: {
+          q: "ما الدور الذي تلعبه الأوزان (Weights) في تحديد دقة تصنيف الشبكة العصبية؟",
+          opts: ["تحدد حجم الشاشة الفيزيائي", "تحدد قوة الإشارة وتأثير كل مدخل على القرار النهائي لتصنيف الصورة", "تزيد من سرعة مروحة التبريد", "تتحكم في شدة إضاءة الغرفة"],
+          ans: 1,
+          exp: "تمثل الأوزان قوة التأثير النسبي لكل عصبون على العصبون التالي وصولاً للقرار الصائب."
+        },
+        en: {
+          q: "What role do synaptic weights play in governing neural network classification precision?",
+          opts: ["Determining monitor casing dimensions", "Scaling input feature signal strength toward intermediate activations and final outputs", "Modulating cooling fan rpm curves", "Controlling room ceiling lighting"],
+          ans: 1,
+          exp: "Weights scale signals across layers to form high-fidelity predictive mappings."
+        }
+      },
+      {
+        ar: {
+          q: "أي العوامل التالية يُعد سبباً في جعل مخرجات الذكاء الاصطناعي التوليدي تبدو مقنعة وبليغة جداً رغم خطئها؟",
+          opts: ["ضعف جودة الاتصال بالإنترنت", "صغر حجم المعالج في الحاسوب", "تدرب النماذج على كميات ضخمة من النصوص البشرية مما أكسبها طلاقة أسلوبية عالية", "استخدام الصمامات المفرغة القديمة"],
+          ans: 2,
+          exp: "طلاقة الأسلوب ناتجة عن التدرب على بلاغة اللغات البشرية مما يجعل حتى الهلوسات تبدو مقنعة."
+        },
+        en: {
+          q: "Why do hallucinated generative AI outputs appear strikingly persuasive despite being wrong?",
+          opts: ["Intermittent broadband connectivity", "Compact silicon microprocessor footprint", "Extensive training on massive corpora yielding high surface fluency and coherent syntax", "Employing 1940s thermionic hardware"],
+          ans: 2,
+          exp: "Fluency learned from vast human corpora makes factually baseless outputs sound convincing."
+        }
+      },
+      {
+        ar: {
+          q: "عند مقارنة الذكاء الاصطناعي بالبرمجة التقليدية في مسألة قيادة السيارات، نجد أن البرمجة التقليدية:",
+          opts: ["تتفوق دائماً في كل الطرق والظروف", "تتعلم من حوادث الطرق ذاتياً", "تولد مقاطع فيديو واقعية", "تعجز عن حصر وبرمجة كافة الاحتمالات والمفاجآت المرورية يدوياً"],
+          ans: 3,
+          exp: "من المستحيل كتابة كود يدوي لكل مشهد مروري محتمل، لذا يلزم الذكاء الاصطناعي للتعلم من الأنماط."
+        },
+        en: {
+          q: "Comparing classical coding with AI in autonomous driving, classical programming:",
+          opts: ["Flawlessly navigates every extreme condition", "Independently learns from collision telemetry", "Synthesizes photorealistic roadway videos", "Cannot feasibly anticipate and hand-code every real-world traffic edge-case"],
+          ans: 3,
+          exp: "Deterministic rules cannot handle the unbounded edge-cases present on physical roads."
+        }
+      },
+      {
+        ar: {
+          q: "ما الميزة التي يضيفها الواقع المعزز (AR) للأطباء أثناء العمليات الجراحية الدقيقة؟",
+          opts: ["إسقاط معلومات حيوية وصور ثلاثية الأبعاد لأعضاء المريض فوق جسمه مباشرة أثناء الجراحة", "عزل الطبيب في عالم افتراضي مظلم", "إلغاء الحاجة لتعقيم الأدوات الطبية", "إيقاف نبضات قلب المريض"],
+          ans: 0,
+          exp: "يسقط الواقع المعزز بيانات الأشعة ثلاثية الأبعاد فوق المريض لمساعدة الجراح دون حجب رؤيته الحقيقية."
+        },
+        en: {
+          q: "What utility does Augmented Reality (AR) provide surgeons during complex procedures?",
+          opts: ["Superimposing volumetric telemetry and patient scans directly over the operative field", "Blinding surgeons inside a dark digital void", "Eliminating sterilization protocols", "Arresting patient vital signs"],
+          ans: 0,
+          exp: "AR overlays contextual anatomical imagery over physical structures to guide surgical incisions."
+        }
+      },
+      {
+        ar: {
+          q: "إذا قارنا الحوسبة السحابية بالحوسبة الطرفية، نجد أن الحوسبة الطرفية تتميز بـ:",
+          opts: ["الحاجة لمراكز بيانات ضخمة في قارة أخرى", "معالجة البيانات فوراً على الجهاز لتقليل زمن التأخير وحفظ الخصوصية", "اعتمادها الكامل على الاتصال البطيء", "عجزها عن العمل مع السيارات الحديثة"],
+          ans: 1,
+          exp: "الحوسبة الطرفية تمتاز بالسرعة الفائقة لعدم انتظار نقل البيانات عبر الشبكة إلى السحابة."
+        },
+        en: {
+          q: "Comparing Cloud Computing to Edge Computing, Edge Computing is distinguished by:",
+          opts: ["Requiring offshore hyper-scale server warehouses", "Immediate on-device processing slashing latency and safeguarding local privacy", "Full dependence on degraded network lines", "Inability to interface with vehicles"],
+          ans: 1,
+          exp: "Edge architectures process signals locally to achieve microsecond latency."
+        }
+      },
+      {
+        ar: {
+          q: "أي مما يلي يُعد نموذجاً تطبيقياً للدفع غير النقدي انتشر في المتاجر ومحطات الوقود؟",
+          opts: ["الدفع بالعملات المعدنية القديمة", "المقايضة بالسلع والقمح", "استخدام بطاقات الدفع البنكية غير التلامسية وتطبيقات المحافظ الإلكترونية", "كتابة صكوك ورقية يدوية"],
+          ans: 2,
+          exp: "البطاقات اللاتلامسية ومحافظ الهواتف الذكية هي الواجهة الأبرز للتحول إلى الدفع غير النقدي."
+        },
+        en: {
+          q: "Which of the following represents a widespread cashless payment method in retail?",
+          opts: ["Antique silver coinage", "Bartering commodities like grain", "Contactless bank cards and smartphone digital wallet apps", "Handwritten paper promissory notes"],
+          ans: 2,
+          exp: "NFC smart cards and mobile wallets represent standard cashless point-of-sale systems."
+        }
+      },
+      {
+        ar: {
+          q: "تعتبر ظاهرة تضاعف الترانزستورات تاريخياً كل سنتين تقريباً تعبيراً دقيقاً عن:",
+          opts: ["قانون نيوتن للجاذبية", "قانون أوم للكهرباء", "النظرية النسبية العامة", "ملاحظة قانون مور التجريبية الهندسية"],
+          ans: 3,
+          exp: "قانون مور هو ملاحظة تجريبية صاغها جوردون مور وليست قانوناً فيزيائياً حتمياً."
+        },
+        en: {
+          q: "The historical observation of microchip transistor counts doubling roughly every two years is:",
+          opts: ["Newton's Law of Gravitation", "Ohm's Law of Resistance", "Einstein's General Relativity", "Gordon Moore's empirical engineering observation"],
+          ans: 3,
+          exp: "Moore's Law is an empirical industry trajectory rather than an invariant physical law."
+        }
+      },
+      {
+        ar: {
+          q: "ما الميزة التي تمنحها الشبكات العصبية الاصطناعية لبرمجيات الترجمة الآلية المعاصرة؟",
+          opts: ["فهم سياق الجملة بالكامل وتقديم صياغة طبيعية بدلاً من الترجمة الحرفية كلمة بكلمة", "منع ترجمة أي لغة أجنبية", "إلغاء الحاجة للكهرباء في السيرفرات", "حذف الكلمات الصعبة من القواميس"],
+          ans: 0,
+          exp: "تتعلم الشبكات العصبية السياق الدلالي للجمل مما ينتج ترجمات بليغة تحاكي الصياغة الإنسانية."
+        },
+        en: {
+          q: "What advantage do artificial neural networks bring to modern machine translation?",
+          opts: ["Parsing holistic contextual syntax for fluid translation instead of literal word-for-word lookup", "Prohibiting foreign language interpretation", "Eliminating server electrical demands", "Excising complex vocabulary from lexicons"],
+          ans: 0,
+          exp: "Neural translation models encode deep context to generate fluent, idiomatically grounded prose."
+        }
+      },
+      {
+        ar: {
+          q: "تؤكد كتب الوزارة على أن استيعاب الذكاء الاصطناعي يتطلب فهمه كـ:",
+          opts: ["برنامج محادثة وحيد معزول عن التاريخ", "منظومة مترابطة تبدأ من البنية التحتية للحوسبة وتتدرج عبر البيانات والتعلم وصولاً للتوليد", "جهاز ميكانيكي يعمل بالبخار", "تقنية خطرة يجب حظرها تماماً"],
+          ans: 1,
+          exp: "يربط المنهج بين تطور عتاد الحوسبة، وظهور البيانات الضخمة، ونماذج التعلم وصولاً للذكاء التوليدي."
+        },
+        en: {
+          q: "The curriculum emphasizes that mastering AI requires understanding it as:",
+          opts: ["An isolated single chatbot tool", "An interconnected system evolving from computing infrastructure through learning models to generative synthesis", "A steam-powered mechanical contraption", "A hazardous field to be completely banned"],
+          ans: 1,
+          exp: "The curriculum grounds AI as a holistic progression spanning hardware, data, and algorithms."
+        }
+      },
+      {
+        ar: {
+          q: "الخلاصة المنهجية التي يجب أن يخرج بها الطالب بعد دراسة الدرسين 1-1 و 1-2 هي أن:",
+          opts: ["التكنولوجيا تتطور بمعزل عن المجتمع", "الذكاء الاصطناعي معصوم من الخطأ تماماً", "تكنولوجيا المعلومات والذكاء الاصطناعي أدوات متطورة تُمكّن الإنسان وتتطلب وعياً نقدياً ومسؤولية", "الحواسيب القديمة كانت أكثر ذكاءً من أنظمة اليوم"],
+          ans: 2,
+          exp: "التقنيات أدوات تخدم البشرية وتستلزم الفهم الهندسي والتدقيق النقدي والاستخدام المسؤول."
+        },
+        en: {
+          q: "The core pedagogical conclusion students should synthesize from Lessons 1-1 and 1-2 is that:",
+          opts: ["Technology advances in total isolation from society", "Artificial intelligence is universally infallible", "Information technology and AI are powerful human enablers requiring critical judgment and ethical responsibility", "Early vacuum tube mainframes were more capable than modern AI"],
+          ans: 2,
+          exp: "IT and AI represent transformative human amplifiers requiring critical literacy and verified stewardship."
+        }
+      }
+    ];
+
+    // تسطيح الأزواج لتصبح قائمة متتالية من 200 بطاقة سؤال (كل سؤال عربي يليه نفس السؤال بالإنجليزية)
+    let allQuestions = [];
+    rawPairs.forEach((pair, index) => {
+      // السؤال العربي
+      allQuestions.push({
+        id: `q-${index + 1}-ar`,
+        pairNum: index + 1,
+        lang: 'ar',
+        badge: `سؤال ${index + 1} (عربي)`,
+        text: pair.ar.q,
+        options: pair.ar.opts,
+        correct: pair.ar.ans,
+        explanation: pair.ar.exp
+      });
+      // نفس السؤال بالإنجليزية لطلاب اللغات
+      allQuestions.push({
+        id: `q-${index + 1}-en`,
+        pairNum: index + 1,
+        lang: 'en',
+        badge: `Question ${index + 1} (English / Languages)`,
+        text: pair.en.q,
+        options: pair.en.opts,
+        correct: pair.en.ans,
+        explanation: pair.en.exp
+      });
+    });
+
+    let score = 0;
+    let answeredCount = 0;
+    const answeredMap = new Set();
+
+    function renderQuestions(filter = 'all') {
+      const quizList = document.getElementById('quiz-list');
+      quizList.innerHTML = '';
+
+      allQuestions.forEach((q, idx) => {
+        if (filter !== 'all' && q.lang !== filter) return;
+
+        const card = document.createElement('div');
+        card.className = `question-card ${q.lang === 'ar' ? 'ar-card' : 'en-card'}`;
+        card.id = `card-${q.id}`;
+
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'card-header';
+        headerDiv.innerHTML = `
+          <span class="badge ${q.lang === 'ar' ? 'badge-ar' : 'badge-en'}">${q.badge}</span>
+          <small style="color: var(--text-muted); font-weight: 700;">#${idx + 1} / 200</small>
+        `;
+
+        const title = document.createElement('div');
+        title.className = 'q-text';
+        title.textContent = q.text;
+
+        const optionsGrid = document.createElement('div');
+        optionsGrid.className = 'options-grid';
+
+        q.options.forEach((optText, optIdx) => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          btn.textContent = optText;
+          btn.onclick = () => handleSelect(q.id, optIdx, q.correct, q.explanation, q.lang);
+          optionsGrid.appendChild(btn);
+        });
+
+        const feedback = document.createElement('div');
+        feedback.className = 'feedback';
+        feedback.id = `feedback-${q.id}`;
+
+        card.appendChild(headerDiv);
+        card.appendChild(title);
+        card.appendChild(optionsGrid);
+        card.appendChild(feedback);
+        quizList.appendChild(card);
+      });
+    }
+
+    function handleSelect(qId, selectedIdx, correctIdx, expText, lang) {
+      if (answeredMap.has(qId)) return;
+      answeredMap.add(qId);
+      answeredCount++;
+
+      const card = document.getElementById(`card-${qId}`);
+      const buttons = card.querySelectorAll('.option-btn');
+      const feedback = document.getElementById(`feedback-${qId}`);
+
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === correctIdx) {
+          btn.classList.add('correct');
+        }
+        if (idx === selectedIdx && selectedIdx !== correctIdx) {
+          btn.classList.add('wrong');
+        }
+      });
+
+      feedback.classList.add('show');
+      if (selectedIdx === correctIdx) {
+        score++;
+        feedback.classList.add('correct');
+        feedback.innerHTML = lang === 'ar' 
+          ? `<strong>إجابة صحيحة ممتازة!</strong> ${expText}` 
+          : `<strong>Correct Answer!</strong> ${expText}`;
+      } else {
+        feedback.classList.add('wrong');
+        feedback.innerHTML = lang === 'ar' 
+          ? `<strong>إجابة غير دقيقة.</strong> الإجابة الصحيحة هي الخيار المميز بالأخضر. ${expText}` 
+          : `<strong>Incorrect.</strong> The correct answer is highlighted in green. ${expText}`;
+      }
+
+      document.getElementById('score').textContent = score;
+      document.getElementById('answered').textContent = answeredCount;
+    }
+
+    function filterQuestions(lang) {
+      renderQuestions(lang);
+    }
+
+    function resetQuiz() {
+      score = 0;
+      answeredCount = 0;
+      answeredMap.clear();
+      document.getElementById('score').textContent = '0';
+      document.getElementById('answered').textContent = '0';
+      renderQuestions('all');
+    }
+
+    // تشغيل بنك الأسئلة فور تحميل الصفحة
+    renderQuestions('all');
+  </script>
+</body>
+</html>
