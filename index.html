@@ -5,231 +5,107 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bac 2</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700&display=swap');
+    ```css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    :root {
-      --primary: #1e3a8a;
-      --primary-light: #3b82f6;
-      --secondary: #0d9488;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text: #0f172a;
-      --text-muted: #64748b;
-      --correct: #16a34a;
-      --wrong: #dc2626;
-      --border: #e2e8f0;
-    }
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    font-family: Arial, sans-serif;
+
+    background: linear-gradient(135deg, #141e30, #243b55);
+
+    padding: 30px;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+a {
+    display: block;
+
+    padding: 20px 25px;
+
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+
+    text-decoration: none;
+    text-align: center;
+
+    font-size: 20px;
+    font-weight: bold;
+
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+
+    backdrop-filter: blur(10px);
+
+    transition: 0.3s ease;
+}
+
+a:hover {
+    transform: translateY(-5px) scale(1.02);
+
+    background: rgba(255, 255, 255, 0.2);
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+a:active {
+    transform: scale(0.98);
+}
+
+@media (max-width: 600px) {
 
     body {
-      font-family: 'Cairo', 'Inter', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      padding: 20px;
+        padding: 20px;
     }
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
+    a {
+        font-size: 17px;
+        padding: 17px;
     }
+}
+```
 
-    header {
-      background: linear-gradient(135deg, var(--primary), var(--primary-light));
-      color: white;
-      padding: 24px;
-      border-radius: 16px;
-      margin-bottom: 24px;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
+والـ HTML يكون بسيطًا جدًا:
 
-    .title-area h1 {
-      font-size: 1.5rem;
-      font-weight: 800;
-    }
+```html
+<div class="container">
 
-    .title-area p {
-      font-size: 0.95rem;
-      opacity: 0.9;
-    }
+    <a href="#">Home</a>
 
-    .score-board {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(8px);
-      padding: 12px 20px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 1.1rem;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
+    <a href="#">About Us</a>
 
-    .controls {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
+    <a href="#">Our Courses</a>
 
-    .btn {
-      padding: 10px 18px;
-      border-radius: 8px;
-      border: none;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
-      transition: all 0.2s;
-    }
+    <a href="#">Projects</a>
 
-    .btn-primary {
-      background-color: var(--primary);
-      color: white;
-    }
+    <a href="#">Contact Us</a>
 
-    .btn-primary:hover {
-      background-color: #172554;
-    }
+</div>
+```
 
-    .btn-outline {
-      background-color: white;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
+الشكل النهائي سيكون عبارة عن **روابط كبيرة مرتبة رأسيًا**، مع خلفية Gradient وتأثير Glass عند المرور بالماوس، ويظل Responsive على الموبايل.
 
-    .question-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .question-card.en-card {
-      direction: ltr;
-      text-align: left;
-      font-family: 'Inter', sans-serif;
-      border-left: 4px solid var(--secondary);
-      border-right: 1px solid var(--border);
-      background-color: #fcfdfe;
-    }
-
-    .question-card.ar-card {
-      border-right: 4px solid var(--primary-light);
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-
-    .badge-ar {
-      background-color: #dbeafe;
-      color: #1e40af;
-    }
-
-    .badge-en {
-      background-color: #ccfbf1;
-      color: #0f766e;
-    }
-
-    .q-text {
-      font-size: 1.05rem;
-      font-weight: 700;
-      margin-bottom: 16px;
-      color: var(--text);
-    }
-
-    .options-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    @media (min-width: 640px) {
-      .options-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    .option-btn {
-      padding: 12px 14px;
-      border: 1.5px solid var(--border);
-      background: white;
-      border-radius: 8px;
-      text-align: inherit;
-      font-size: 0.95rem;
-      font-family: inherit;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .option-btn:hover:not(:disabled) {
-      border-color: var(--primary-light);
-      background-color: #eff6ff;
-    }
-
-    .option-btn.correct {
-      background-color: #dcfce7 !important;
-      border-color: var(--correct) !important;
-      color: #14532d;
-      font-weight: 700;
-    }
-
-    .option-btn.wrong {
-      background-color: #fee2e2 !important;
-      border-color: var(--wrong) !important;
-      color: #7f1d1d;
-    }
-
-    .feedback {
-      margin-top: 14px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      display: none;
-    }
-
-    .feedback.show {
-      display: block;
-    }
-
-    .feedback.correct {
-      background-color: #f0fdf4;
-      color: #166534;
-      border: 1px solid #bbf7d0;
-    }
-
-    .feedback.wrong {
-      background-color: #fef2f2;
-      color: #991b1b;
-      border: 1px solid #fecaca;
-    }
   </style>
 </head>
 <body>
 <a href="lesson1.html">lesson1</a>
-  <a href="lesson2.html">lesson.html</a>
+  <a href="lesson2.html">lesson2</a>
 
 </body>
 </html>
