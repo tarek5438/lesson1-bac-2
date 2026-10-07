@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilingual Quiz with Index: AI Ethics & Responsibility (Lesson 1-4)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-dark: #0f172a;
+            --accent: #f59e0b;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 26px 20px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.25);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 1.7rem;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            direction: ltr;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            display: block;
+        }
+
+        .stat-val {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stat-val.high {
+            color: var(--accent);
+        }
+
+        /* Index Button */
+        .btn-index {
+            background: #eff6ff;
+            color: var(--primary);
+            border: 2px solid #bfdbfe;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-index:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.3s ease;
+        }
+
+        /* Question Box */
+        .q-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 10px 20px -3px rgba(0,0,0,0.06);
+            margin-bottom: 24px;
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .q-badge {
+            background: #eff6ff;
+            color: var(--primary);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .q-text-ar {
+            font-size: 1.25rem;
+            font-weight: 800;
+            line-height: 1.8;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+
+        .q-text-en {
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #475569;
+            direction: ltr;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            border-left: 3px solid var(--primary);
+            padding-left: 12px;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .opt-btn {
+            background: #f8fafc;
+            border: 2px solid var(--border);
+            padding: 14px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-align: right;
+        }
+
+        .opt-btn:hover:not(:disabled) {
+            background: #eff6ff;
+            border-color: #93c5fd;
+            transform: translateX(-4px);
+        }
+
+        .opt-btn.correct {
+            background: #dcfce7 !important;
+            border-color: var(--success) !important;
+        }
+
+        .opt-btn.wrong {
+            background: #fee2e2 !important;
+            border-color: var(--danger) !important;
+        }
+
+        .opt-ar {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .opt-en {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #64748b;
+            direction: ltr;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .opt-btn.correct .opt-ar, .opt-btn.correct .opt-en {
+            color: #15803d !important;
+        }
+
+        .opt-btn.wrong .opt-ar, .opt-btn.wrong .opt-en {
+            color: #991b1b !important;
+        }
+
+        .explanation {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 0.98rem;
+            line-height: 1.7;
+            display: none;
+            background: #f1f5f9;
+            border-right: 5px solid var(--primary);
+        }
+
+        .exp-en {
+            direction: ltr;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            color: #334155;
+            margin-top: 6px;
+            font-size: 0.92rem;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+        }
+
+        .btn-nav {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-nav:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-nav:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        /* Modal Overlay & Drawer for Question Index */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 750px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 26px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+            animation: popIn 0.25s ease;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .modal-header h3 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .close-btn {
+            background: #f1f5f9;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+        }
+
+        .close-btn:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .legend {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+        }
+
+        .grid-index {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .index-pill {
+            background: #f8fafc;
+            border: 2px solid var(--border);
+            padding: 10px 4px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            color: #334155;
+        }
+
+        .index-pill:hover {
+            border-color: var(--primary-light);
+            background: #eff6ff;
+            transform: translateY(-2px);
+        }
+
+        .index-pill.active {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.2);
+            font-weight: 900;
+        }
+
+        .index-pill.solved-correct {
+            background: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #15803d !important;
+        }
+
+        .index-pill.solved-wrong {
+            background: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #b91c1c !important;
+        }
+
+        /* Results Card */
+        .results-card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .trophy {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: #eff6ff;
+            border: 6px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+        }
+
+        .score-num {
+            font-size: 2.4rem;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        .btn-restart {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 14px 34px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: 0.2s;
+        }
+
+        .btn-restart:hover {
+            transform: scale(1.03);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>اختبار ثنائي اللغة مع فهرس تنقل سريع (30 سؤالاً)</h1>
+        <p>Bilingual Quiz with Index: Lesson 1-4 AI Ethics & Responsibility</p>
+    </header>
+
+    <!-- Stats & Index Bar -->
+    <div class="stats-bar">
+        <div class="stat-item">
+            <span class="stat-label">رقم السؤال / Question</span>
+            <div><span class="stat-val" id="qCurrent">1</span> / 30</div>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">أول محاولة / 1st Score 🎯</span>
+            <span class="stat-val" style="color: #6366f1;" id="firstScore">--</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">الدرجة الحالية / Score</span>
+            <span class="stat-val" id="score">0</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">أعلى نتيجة / High Score 🏆</span>
+            <span class="stat-val high" id="highScore">0</span>
+        </div>
+        <div>
+            <button class="btn-index" onclick="openIndexModal()">
+                <span>📑</span>
+                <span>فهرس الأسئلة (1-30)</span>
+            </button>
+        </div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <!-- Question Box -->
+    <div class="q-card" id="quizCard">
+        <div class="q-header">
+            <span class="q-badge" id="topicBadge">Lesson 1-4</span>
+            <span style="color: var(--text-muted); font-size: 0.9rem;" id="qStatusIndicator">لم يُجب بعد / Not answered</span>
+        </div>
+        
+        <div class="q-text-ar" id="questionTextAr">جاري تحميل السؤال...</div>
+        <div class="q-text-en" id="questionTextEn">Loading question...</div>
+        
+        <div class="options-list" id="optionsContainer"></div>
+        
+        <div class="explanation" id="explanationText"></div>
+
+        <div class="actions">
+            <button class="btn-nav" id="prevBtn" onclick="prevQuestion()" disabled>➡️ السابق / Prev</button>
+            <button class="btn-nav" id="nextBtn" onclick="nextQuestion()">التالي / Next ⬅️</button>
+        </div>
+    </div>
+
+    <!-- Results Box -->
+    <div class="results-card" id="resultsCard">
+        <div class="trophy" id="trophyIcon">🎉</div>
+        <h2 id="resultMsg" style="font-size: 1.8rem; margin-bottom: 8px;">أحسنت صنعاً!</h2>
+        <p id="resultSubtitle" style="color: var(--text-muted);">You completed all 30 questions!</p>
+        
+        <div class="score-circle">
+            <div class="score-num" id="finalScore">0</div>
+            <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">/ 30</span>
+        </div>
+
+        <p id="highScoreNotice" style="font-weight: 700; font-size: 1.1rem; color: var(--accent); margin-top: 10px;"></p>
+
+        <button class="btn-restart" onclick="restartQuiz()">إعادة الاختبار من البداية 🔄</button>
+    </div>
+</div>
+
+<!-- Modal Index Window -->
+<div class="modal-overlay" id="indexModal" onclick="closeIndexModalOnOutside(event)">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>📑 فهرس الانتقال المباشر للأسئلة (Question Index)</h3>
+            <button class="close-btn" onclick="closeIndexModal()">✕</button>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item"><div class="legend-dot" style="background: #22c55e;"></div><span>إجابة صحيحة</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background: #ef4444;"></div><span>إجابة خاطئة</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background: #1e3a8a;"></div><span>السؤال المفتوح حالياً</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background: #e2e8f0; border: 1px solid #cbd5e1;"></div><span>لم يُحل بعد</span></div>
+        </div>
+
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">انقر على أي رقم سؤال للانتقال إليه فوراً ومراجعته دون قيود:</p>
+        
+        <div class="grid-index" id="gridIndexContainer"></div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            ar_q: "ما هو التعريف الدقيق لمصطلح 'التحيز الخوارزمي' في أنظمة الذكاء الاصطناعي؟",
+            en_q: "What is the precise definition of 'Algorithmic Bias' in AI systems?",
+            options: [
+                { ar: "بطء في معالجة البيانات بسبب ضعف اتصال الإنترنت", en: "Slow data processing due to poor network connectivity" },
+                { ar: "نمط في مخرجات الذكاء الاصطناعي قد يؤدي إلى نتائج غير عادلة أو ضارة", en: "A pattern in AI outputs that may lead to unfair or harmful outcomes" },
+                { ar: "عدم قدرة الحاسوب على إجراء العمليات الحسابية بدقة", en: "Inability of computers to perform mathematical calculations accurately" },
+                { ar: "زيادة عدد الترانزستورات داخل الدوائر المتكاملة", en: "Doubling of transistors on integrated circuit chips" }
+            ],
+            correct: 1,
+            exp_ar: "التحيز الخوارزمي هو نمط في مخرجات الذكاء الاصطناعي قد يؤدي إلى نتائج غير عادلة أو ضارة، وينشأ من البيانات أو تصميم النظام أو استخدامه (كتاب ص 25).",
+            exp_en: "Algorithmic bias is a pattern in AI outputs that leads to unfair or harmful outcomes, originating from data, system design, or operational contexts (Textbook p. 25)."
+        },
+        {
+            ar_q: "أي مما يلي يُعد من الأسباب الرئيسية لنشوء التحيز في أنظمة الذكاء الاصطناعي؟",
+            en_q: "Which of the following is a primary cause of bias in artificial intelligence systems?",
+            options: [
+                { ar: "تحيز بيانات التدريب أو عدم كفايتها عن سمات معينة", en: "Biased training data or insufficient representation of certain attributes" },
+                { ar: "ارتفاع سعة الذاكرة العشوائية للجهاز", en: "Excessive random access memory (RAM) capacity" },
+                { ar: "تطبيق التشفير المتماثل في الاتصال", en: "Implementing symmetric encryption across transmissions" },
+                { ar: "استخدام الحوسبة الطرفية على الجهاز", en: "Utilizing on-device edge computing architecture" }
+            ],
+            correct: 0,
+            exp_ar: "ينشأ التحيز الخوارزمي أساساً عندما تكون بيانات التدريب متحيزة أو تفتقر إلى تمثيل متوازن للسمات والفئات (كتاب ص 25).",
+            exp_en: "Algorithmic bias stems primarily from skewed training data or inadequate representation of demographics and features (Textbook p. 25)."
+        },
+        {
+            ar_q: "ما المقصود بمصطلح 'بيانات التدريب' (Training Data)؟",
+            en_q: "What is meant by the concept of 'Training Data'?",
+            options: [
+                { ar: "البيانات الناتجة عن النظام بعد تشغيله للمستخدمين", en: "Real-time user output data generated after model deployment" },
+                { ar: "الأمثلة التي يتعلم منها نظام الذكاء الاصطناعي أنماطه قبل استخدامه", en: "The examples an AI system learns its patterns from prior to operational use" },
+                { ar: "ملفات النسخ الاحتياطي المخزنة على السحابة", en: "Backup archives stored on remote cloud servers" },
+                { ar: "برمجيات مراقبة الشبكة ومكافحة التجسس", en: "Network intrusion monitoring and anti-spyware tools" }
+            ],
+            correct: 1,
+            exp_ar: "بيانات التدريب هي الأمثلة التي يتعلم منها النظام أنماطه قبل استخدامه؛ وكلما قل تمثيلها للواقع زاد احتمال تحيز مخرجاته (كتاب ص 25).",
+            exp_en: "Training data consists of baseline samples an AI learns patterns from; lower real-world representation increases output bias (Textbook p. 25)."
+        },
+        {
+            ar_q: "ما هو المبدأ الأخلاقي الذي يعني 'عدم التمييز ظلماً ضد أي شخص أو مجموعة بعينها'؟",
+            en_q: "Which ethical principle dictates 'not unjustly discriminating against any specific individual or group'?",
+            options: [
+                { ar: "الشفافية", en: "Transparency" },
+                { ar: "المساءلة", en: "Accountability" },
+                { ar: "العدالة", en: "Fairness" },
+                { ar: "حماية الخصوصية", en: "Privacy Protection" }
+            ],
+            correct: 2,
+            exp_ar: "العدالة تعني ضمان عدم التمييز ظلماً ضد أي شخص أو مجموعة بعينها في نتائج وقرارات الذكاء الاصطناعي (كتاب ص 27).",
+            exp_en: "Fairness entails preventing unjust discrimination against any individual or demographic group in AI outcomes (Textbook p. 27)."
+        },
+        {
+            ar_q: "إتاحة معلومات واضحة ومناسبة عن نظام الذكاء الاصطناعي وعملية اتخاذ القرار وحدوده يجسد مبدأ:",
+            en_q: "Providing clear and appropriate information about the AI system, its decision-making, and its limits embodies:",
+            options: [
+                { ar: "الشفافية", en: "Transparency" },
+                { ar: "العدالة", en: "Fairness" },
+                { ar: "المساءلة", en: "Accountability" },
+                { ar: "الاستمرارية", en: "Persistence" }
+            ],
+            correct: 0,
+            exp_ar: "الشفافية هي إتاحة معلومات واضحة ومناسبة عن النظام واستخدامه وعملية اتخاذ القرار وحدوده (كتاب ص 26 و 27).",
+            exp_en: "Transparency requires making clear disclosures regarding system architecture, usage, and decision limitations (Textbook p. 26, 27)."
+        },
+        {
+            ar_q: "التعامل مع المعلومات الشخصية بشكل مناسب والتحكم في البيانات المجمعة يعبر عن مبدأ:",
+            en_q: "Handling personal data appropriately and governing collected information reflects the principle of:",
+            options: [
+                { ar: "العدالة", en: "Fairness" },
+                { ar: "حماية الخصوصية", en: "Privacy Protection" },
+                { ar: "الشفافية", en: "Transparency" },
+                { ar: "المساءلة", en: "Accountability" }
+            ],
+            correct: 1,
+            exp_ar: "حماية الخصوصية تعني التعامل مع المعلومات الشخصية بشكل مناسب وحمايتها من الجمع غير المصرح به (كتاب ص 26 و 27).",
+            exp_en: "Privacy protection demands proper handling and robust safeguarding of individual personal data (Textbook p. 26, 27)."
+        },
+        {
+            ar_q: "تحديد الجهات المسؤولة عن النظام وقراراته وآثاره وإمكان محاسبتها وفق أدوارها هو مبدأ:",
+            en_q: "Designating entities responsible for the system, its decisions, and its impacts, ensuring they can be held liable, is:",
+            options: [
+                { ar: "الشفافية", en: "Transparency" },
+                { ar: "المساءلة", en: "Accountability" },
+                { ar: "العدالة", en: "Fairness" },
+                { ar: "الصندوق الأسود", en: "Black Box" }
+            ],
+            correct: 1,
+            exp_ar: "المساءلة تعني تحديد الجهات المسؤولة عن النظام وقراراته وآثاره وإمكان محاسبتها وفق أدوار كل طرف (كتاب ص 26 و 27).",
+            exp_en: "Accountability identifies the entities responsible for system decisions and ensures they can be held liable (Textbook p. 26, 27)."
+        },
+        {
+            ar_q: "ما هي التقنية التي تتيح للبشر فهم العوامل والأسباب التي أدت لاتخاذ الذكاء الاصطناعي حكماً معيناً؟",
+            en_q: "What technique enables humans to understand the factors behind why an AI reached a specific decision?",
+            options: [
+                { ar: "الذكاء الاصطناعي القابل للتفسير (XAI)", en: "Explainable AI (XAI)" },
+                { ar: "الشبكة الافتراضية الخاصة (VPN)", en: "Virtual Private Network (VPN)" },
+                { ar: "المصادقة متعددة العوامل (MFA)", en: "Multi-Factor Authentication (MFA)" },
+                { ar: "التشفير بالمفتاح العام", en: "Public Key Cryptography" }
+            ],
+            correct: 0,
+            exp_ar: "الذكاء الاصطناعي القابل للتفسير (XAI) هو أساليب تساعد البشر على فهم العوامل التي أسهمت في قرار معين (كتاب ص 26).",
+            exp_en: "Explainable AI (XAI) encompasses methods that help humans understand the factors contributing to a given output (Textbook p. 26)."
+        },
+        {
+            ar_q: "ما هو الاختصار الشائع لتقنية 'الذكاء الاصطناعي القابل للتفسير'؟",
+            en_q: "What is the common acronym for 'Explainable Artificial Intelligence'?",
+            options: [
+                { ar: "API", en: "API" },
+                { ar: "XAI", en: "XAI" },
+                { ar: "DMZ", en: "DMZ" },
+                { ar: "2FA", en: "2FA" }
+            ],
+            correct: 1,
+            exp_ar: "يُرمز للذكاء الاصطناعي القابل للتفسير بالاختصار XAI (كتاب ص 26 و 28).",
+            exp_en: "The standard acronym for Explainable Artificial Intelligence is XAI (Textbook p. 26, 28)."
+        },
+        {
+            ar_q: "تحدث 'مشكلة الصندوق الأسود' في الذكاء الاصطناعي عندما:",
+            en_q: "The 'Black Box Problem' in artificial intelligence occurs when:",
+            options: [
+                { ar: "تتوقف خوادم النظام عن العمل نهائياً", en: "System servers experience complete outages" },
+                { ar: "يكون من غير الواضح كيف توصل الذكاء الاصطناعي إلى حكمه", en: "It is unclear how the AI arrived at its judgment" },
+                { ar: "يتم تشفير القرص الصلب بواسطة برنامج فدية", en: "A storage drive is locked by ransomware" },
+                { ar: "تفشل بطاقة الشبكة في نقل الحزم", en: "A network interface card drops data packets" }
+            ],
+            correct: 1,
+            exp_ar: "مشكلة الصندوق الأسود تعني فقدان الوضوح حول كيفية اتخاذ الحكم داخل النماذج المعقدة (كتاب ص 21 و 26).",
+            exp_en: "The Black Box problem arises when internal decision pathways of deep models remain opaque to inspection (Textbook p. 21, 26)."
+        },
+        {
+            ar_q: "ما الفرق الأساسي بين 'المساءلة' (Accountability) و'الذكاء القابل للتفسير' (XAI)؟",
+            en_q: "What is the primary difference between 'Accountability' and 'Explainable AI' (XAI)?",
+            options: [
+                { ar: "المساءلة هي قدرة النموذج على الشرح، بينما XAI يحدد من يحاسب", en: "Accountability explains outcomes, while XAI assigns legal blame" },
+                { ar: "XAI يوضح أسباب القرار، بينما المساءلة تحدد من يُحاسب على النتيجة", en: "XAI explains reasons, while accountability determines who answers for results" },
+                { ar: "لا يوجد أي فرق بين المصطلحين في المنظومة الأخلاقية", en: "There is no conceptual difference between the two terms" },
+                { ar: "المساءلة خاصة بالمطور فقط بينما XAI خاص بالمستخدم فقط", en: "Accountability is strictly for developers, while XAI is only for end users" }
+            ],
+            correct: 1,
+            exp_ar: "المساءلة ليست القدرة على شرح القرار - تلك وظيفة XAI - بل تحديد من يحاسب على النتيجة (كتاب ص 26).",
+            exp_en: "Accountability is not explaining decisions—that is XAI's role—but establishing who answers for outcomes (Textbook p. 26)."
+        },
+        {
+            ar_q: "أي من المخاوف الأخلاقية التالية يرتبط مباشرة بنشر كاميرات التعرف على الوجه في الأماكن العامة؟",
+            en_q: "Which ethical dilemma is directly linked to deploying facial recognition cameras in public venues?",
+            options: [
+                { ar: "تتبع الأفراد والتعرف عليهم، مما يثير مخاوف الخصوصية", en: "Tracking and identifying individuals, sparking acute privacy concerns" },
+                { ar: "انخفاض سرعة معالجة الفيديو في الوقت الفعلي", en: "Degraded video processing frames-per-second" },
+                { ar: "صعوبة تخزين الصور على خوادم سحابية", en: "Storage capacity exhaustion on cloud servers" },
+                { ar: "ارتفاع تكلفة كابلات الألياف الضوئية", en: "High deployment costs of fiber optic cabling" }
+            ],
+            correct: 0,
+            exp_ar: "المراقبة عبر تقنية التعرف على الوجه تمكن الكاميرات في الأماكن العامة من التعرف على الأفراد وتتبعهم مما يمس الخصوصية (كتاب ص 26).",
+            exp_en: "Facial recognition surveillance allows camera grids to monitor citizens, causing severe privacy infringement concerns (Textbook p. 26)."
+        },
+        {
+            ar_q: "استخدام نظام توظيف ذكي يفضل الذكور بسبب تدريبه على قرارات سابقة متحيزة يُعد مثالاً على:",
+            en_q: "An automated hiring tool favoring male candidates due to historical recruitment data exemplifies:",
+            options: [
+                { ar: "الشفافية الكاملة", en: "Complete architectural transparency" },
+                { ar: "انعكاس نزعات تمييزية سابقة في بيانات التدريب", en: "Reflection of historical discriminatory biases in training data" },
+                { ar: "التحقق المتبادل الصارم", en: "Proper cross-checking implementation" },
+                { ar: "الدفاع في العمق الشبكي", en: "Network defense-in-depth" }
+            ],
+            correct: 1,
+            exp_ar: "إذا تضمنت بيانات التدريب تمييزاً تاريخياً سابقاً، فإن نموذج الذكاء الاصطناعي يتعلم هذا الانحياز ويكرره كنمط عمل (كتاب ص 25).",
+            exp_en: "Historical discrimination embedded in legacy datasets is absorbed and reproduced by the trained model (Textbook p. 25)."
+        },
+        {
+            ar_q: "ما المقصود بـ 'المتغير البديل' (Proxy Variable) الذي قد يدخل التحيز في النظام؟",
+            en_q: "What is a 'Proxy Variable' that can introduce bias into an AI architecture?",
+            options: [
+                { ar: "متغير يتم استبداله دورياً لتحسين سرعة النظام", en: "A dynamic variable swapped periodically to optimize compute speed" },
+                { ar: "متغير يمثل بشكل غير مباشر سمة محمية (كالرمز البريدي الدال على العرق أو الدخل)", en: "A variable indirectly representing a protected attribute (e.g., zip code for race/income)" },
+                { ar: "مفتاح تشفير مؤقت يستخدم لإنشاء الجلسة", en: "A temporary session encryption token" },
+                { ar: "عنوان IP مخصص للأجهزة الداخلية", en: "A private local IP allocation" }
+            ],
+            correct: 1,
+            exp_ar: "المتغير البديل هو معيار يمثل بشكل غير مباشر سمة محمية؛ كالاعتماد على الرمز البريدي الذي يعكس المستوى العرقي أو الاقتصادي (كتاب ص 25).",
+            exp_en: "A proxy variable is an ostensibly neutral feature that indirectly encodes protected demographic traits (Textbook p. 25)."
+        },
+        {
+            ar_q: "عندما يخطئ نظام ذكاء اصطناعي طبي في تشخيص مرض، فإن توزيع المسؤولية:",
+            en_q: "When an AI diagnostic system causes a medical error, the distribution of responsibility:",
+            options: [
+                { ar: "يقع دائماً على عاتق المبرمج فقط دون غيره", en: "Rests solely upon the software coder" },
+                { ar: "يتحمله المريض وحده لأنه استعان بالتقنية", en: "Is borne entirely by the patient" },
+                { ar: "يختلف باختلاف أدوار المطور والمشغل والمستخدم وفق القواعد المعمول بها", en: "Varies across developers, operators, and users depending on context and rules" },
+                { ar: "يسقط تماماً لأن الآلات لا تحاسب", en: "Is completely void since machines cannot be penalized" }
+            ],
+            correct: 2,
+            exp_ar: "تحديد المسؤولية يختلف باختلاف النظام والاستخدام والقواعد، بين المطور والجهة المشغلة والمستخدم (كتاب ص 26 و 28).",
+            exp_en: "Responsibility distribution depends on specific context, regulations, and distinct roles of developers, operators, and end-users (Textbook p. 26, 28)."
+        },
+        {
+            ar_q: "الجمع الجماعي لبيانات السلوك والاهتمامات عبر الإنترنت يثير مخاوف مرتبطة بمبدأ:",
+            en_q: "Mass collection of behavioral clickstream data online sparks concerns primarily regarding:",
+            options: [
+                { ar: "كفاءة نقل الشبكة", en: "Network bandwidth throughput" },
+                { ar: "حماية الخصوصية", en: "Privacy Protection" },
+                { ar: "سرعة المعالج المركزي", en: "Microprocessor cycle speed" },
+                { ar: "تشفير جلسات TLS", en: "TLS session negotiation" }
+            ],
+            correct: 1,
+            exp_ar: "تجميع وتحليل كميات ضخمة من بيانات السلوك عبر الإنترنت ينتهك خصوصية المستخدمين إذا تم بغير ضوابط واضحة (كتاب ص 26).",
+            exp_en: "Mass scraping and predictive mining of personal browsing histories directly infringes on individual privacy rights (Textbook p. 26)."
+        },
+        {
+            ar_q: "إذا كانت آلية وصول الذكاء الاصطناعي إلى قراره غير واضحة، فإن الخطر الأساسي هو:",
+            en_q: "If an AI system's decision-making process is opaque, the primary risk is:",
+            options: [
+                { ar: "صعوبة تقييم النتيجة واكتشاف الأخطاء أو التحيز الكامن", en: "Difficulty in evaluating results and catching underlying errors or bias" },
+                { ar: "استهلاك مساحة القرص الصلب بالكامل", en: "Immediate exhaustion of physical storage drives" },
+                { ar: "توقف لوحة المفاتيح عن العمل", en: "Peripheral hardware disconnections" },
+                { ar: "بطء سرعة إشارة الواي فاي", en: "Reduced wireless Wi-Fi speeds" }
+            ],
+            correct: 0,
+            exp_ar: "عندما تكون آلية الوصول إلى النتيجة غير واضحة يصعب تقييمها واكتشاف الأخطاء أو التحيز الكامن داخلها (كتاب ص 26).",
+            exp_en: "Opaque model mechanics make auditing, quality assurance, and bias identification extremely difficult (Textbook p. 26)."
+        },
+        {
+            ar_q: "أي المبادئ الأخلاقية يكون مفقوداً عندما يرفض النظام ترقية موظف دون إبداء أي أسباب؟",
+            en_q: "Which ethical principle is violated when an automated system denies an employee promotion with zero explanation?",
+            options: [
+                { ar: "المصادقة البيومترية", en: "Biometric Authentication" },
+                { ar: "الشفافية وقابلية التفسير", en: "Transparency and Explainability" },
+                { ar: "الدفاع في العمق", en: "Defense-in-Depth" },
+                { ar: "الاستمرارية الرقمية", en: "Digital Persistence" }
+            ],
+            correct: 1,
+            exp_ar: "حجب أسباب الرفض يخالف مبدأ الشفافية الذي يضمن حق الفرد في معرفة الأسس التي استند إليها القرار (كتاب ص 26 و 27).",
+            exp_en: "Withholding rejection rationale violates transparency, which mandates understandable insight into automated logic (Textbook p. 26, 27)."
+        },
+        {
+            ar_q: "نظام للتعرف على الوجوه تقل دقته مع فئات معينة مقارنة بغيرها؛ السبب الأرجح هو:",
+            en_q: "A facial recognition model displays lower accuracy on certain demographics than others; the probable cause is:",
+            options: [
+                { ar: "بطء تردد المعالج", en: "Underpowered clock frequencies" },
+                { ar: "بيانات تدريب غير كافية أو غير متوازنة لتلك الفئات", en: "Insufficient or skewed training datasets for those demographics" },
+                { ar: "تلف في كابلات التوصيل", en: "Damaged transmission cables" },
+                { ar: "استخدام بطاقات ذكية قديمة", en: "Obsolete smart cards" }
+            ],
+            correct: 1,
+            exp_ar: "يحدث تراجع الدقة مع مجموعات معينة بسبب قلة تمثيلها ونقص بياناتها في مرحلة التدريب الأولية (كتاب ص 25).",
+            exp_en: "Disproportionate error rates emerge from training on datasets with scarce imagery for specific demographics (Textbook p. 25)."
+        },
+        {
+            ar_q: "أي من الحالات التالية يمثل انتهاكاً مباشراً لمبدأ 'العدالة'؟",
+            en_q: "Which of the following scenarios constitutes a direct breach of the 'Fairness' principle?",
+            options: [
+                { ar: "تقييم الطلاب بناءً على درجاتهم في الاختبار الفعلي", en: "Grading students solely by verified examination performance" },
+                { ar: "استبعاد خوارزمية المنح للطلاب القاطنين بمناطق معينة دون تقييم مهاراتهم", en: "A scholarship algorithm auto-rejecting students based on location without merit review" },
+                { ar: "إشعار المستخدمين بسياسة ملفات تعريف الارتباط", en: "Notifying website visitors of cookie tracking policies" },
+                { ar: "تشفير السجلات الطبية في المستشفى", en: "Encrypting patient hospital databases" }
+            ],
+            correct: 1,
+            exp_ar: "استبعاد الطلاب جغرافياً دون تقييم استحقاقهم يمثل تمييزاً غير عادل ينتهك مبدأ العدالة (كتاب ص 25 و 27).",
+            exp_en: "Disqualifying qualified candidates based on arbitrary regional proxies directly violates fairness standards (Textbook p. 25, 27)."
+        },
+        {
+            ar_q: "هل يكفي أن تكون نتائج نظام الذكاء الاصطناعي صحيحة لتجاهل كيفية اتخاذه للقرار؟",
+            en_q: "Is it acceptable to ignore how an AI made decisions as long as the final output appears accurate?",
+            options: [
+                { ar: "نعم، لأن المخرجات هي المعيار الوحيد", en: "Yes, because utility and results are the only benchmarks" },
+                { ar: "لا، لأن غموض القرار يعيق اكتشاف الأخطاء والتحيز وضمان السلامة", en: "No, opacity prevents verifying correctness, catching bias, and ensuring safety" },
+                { ar: "نعم، طالما أن المعالجة سريعة جداً", en: "Yes, provided execution throughput is ultra-fast" },
+                { ar: "نعم، في الأنظمة التجارية المجانية فقط", en: "Yes, but exclusively on free consumer applications" }
+            ],
+            correct: 1,
+            exp_ar: "عندما تكون عملية اتخاذ القرار غير واضحة، يصعب التحقق مما إذا كانت النتيجة صحيحة وعادلة فعلاً (كتاب ص 27 و 28).",
+            exp_en: "When the decision-making process is obscured, confirming real accuracy and spotting bias is nearly impossible (Textbook p. 27, 28)."
+        },
+        {
+            ar_q: "المفهوم الذي يعبر عن التزام الجهة بتعويض المتضررين ومحاسبة المخطئ قانونياً هو:",
+            en_q: "The concept reflecting institutional liability, legal accountability, and remedies for damages is:",
+            options: [
+                { ar: "المساءلة (Accountability)", en: "Accountability" },
+                { ar: "التعلم غير الموجه", en: "Unsupervised Learning" },
+                { ar: "الذكاء الاصطناعي التوليدي", en: "Generative AI" },
+                { ar: "التحيز الخوارزمي", en: "Algorithmic Bias" }
+            ],
+            correct: 0,
+            exp_ar: "المساءلة هي تحديد الجهات المسؤولة عن النظام وقراراته وآثاره وإمكان محاسبتها وتعويض المتضررين (كتاب ص 26 و 27).",
+            exp_en: "Accountability mandates legal liability and redress mechanisms when automated decisions inflict harm (Textbook p. 26, 27)."
+        },
+        {
+            ar_q: "لماذا يُعد الإشراف البشري واجباً في القرارات التي تعتمد على الذكاء الاصطناعي في الطب والقضاء؟",
+            en_q: "Why is human-in-the-loop oversight imperative for AI deployments in clinical and judicial domains?",
+            options: [
+                { ar: "لأن الحواسيب لا تملك مساحات تخزين كافية", en: "Because computers lack sufficient storage overhead" },
+                { ar: "لأنها قرارات عالية الأثر تمس حقوق وأرواح البشر وتتطلب حكماً أخلاقياً", en: "Because high-stakes decisions affect human lives/rights and demand moral judgment" },
+                { ar: "لأن القوانين تمنع تشغيل الخوادم ليلاً", en: "Because legal statutes prohibit server operations at night" },
+                { ar: "لأن الكاميرات تفقد دقتها في قاعات المحاكم", en: "Because cameras lose resolution in courtrooms" }
+            ],
+            correct: 1,
+            exp_ar: "تتطلب القرارات عالية الأثر إشرافاً بشرياً لأن الخطأ قد يؤدي لضرر دائم يمس الحياة والحقوق الأساسية (كتاب ص 20 و 22).",
+            exp_en: "Critical high-stakes applications involve fundamental human rights and require accountable moral discretion (Textbook p. 20, 22)."
+        },
+        {
+            ar_q: "استخدام بيانات تصفح وسجلات الطلاب الشخصية لأغراض إعلانية دون إذن صريح يمثل خرقاً لـ:",
+            en_q: "Exploiting students' web browsing histories for commercial ads without explicit consent breaches:",
+            options: [
+                { ar: "حماية الخصوصية", en: "Privacy Protection" },
+                { ar: "الاستمرارية الرقمية", en: "Digital Persistence" },
+                { ar: "قابلية الاستنساخ", en: "Data Reproducibility" },
+                { ar: "الحوسبة الكمومية", en: "Quantum Computing" }
+            ],
+            correct: 0,
+            exp_ar: "عدم استخدام البيانات الشخصية المجمعة لأغراض غير الغرض الأصلي منها هو التزام مباشر بحماية الخصوصية (كتاب ص 30).",
+            exp_en: "Using personal records beyond their primary legitimate purpose is a direct infringement on privacy (Textbook p. 30)."
+        },
+        {
+            ar_q: "كيف يمكن للمهندسين والمطورين تقليل التحيز الخوارزمي في نظام ذكاء اصطناعي ناشئ؟",
+            en_q: "How can software engineers effectively mitigate algorithmic bias in an emerging AI system?",
+            options: [
+                { ar: "زيادة استهلاك الطاقة في المعالج فقط", en: "Simply increasing processor power draw" },
+                { ar: "فحص تمثيل بيانات التدريب، وموازنة العينات، واختبار النتائج عبر فئات متنوعة", en: "Auditing training data diversity, balancing samples, and testing across groups" },
+                { ar: "استخدام ألوان جذابة في واجهة المستخدم", en: "Employing visually attractive UI color palettes" },
+                { ar: "إلغاء إجراءات التحقق من كلمات المرور", en: "Disabling authentication password policies" }
+            ],
+            correct: 1,
+            exp_ar: "يتم تقليل التحيز بفحص تمثيل البيانات، ومراجعة اختيار المتغيرات، واختبار أداء النموذج عبر مختلف الفئات (كتاب ص 28 و 29).",
+            exp_en: "Mitigating bias demands auditing training representations, vetting feature variables, and evaluating subgroup parity (Textbook p. 28, 29)."
+        },
+        {
+            ar_q: "أي مما يلي يُعد مثالاً على تطبيق 'الشفافية' في روبوتات الدردشة الذكية؟",
+            en_q: "Which scenario illustrates genuine 'Transparency' in conversational AI bots?",
+            options: [
+                { ar: "إيهام العميل بأنه يتحدث مع إنسان حقيقي", en: "Deceiving users into believing they are speaking with a human" },
+                { ar: "إشعار المستخدم بوضوح بأنه يتحدث مع ذكاء اصطناعي وتوضيح كيفية معالجة كلامه", en: "Informing users they are interacting with an AI and disclosing data practices" },
+                { ar: "تسجيل المكالمة وبيعها لجهات تسويق خارجية", en: "Secretly recording audio to sell to third-party telemarketers" },
+                { ar: "حظر المستخدمين عند طرح أسئلة حرجة", en: "Banning users who submit complex inquiry questions" }
+            ],
+            correct: 1,
+            exp_ar: "تقتضي الشفافية إعلام المستخدم بوضوح بطبيعة النظام الآلي وحدوده وكيفية إدارة مدخلاته (كتاب ص 26 و 27).",
+            exp_en: "Transparency mandates clearly informing users of automated agency, capabilities, and data collection scopes (Textbook p. 26, 27)."
+        },
+        {
+            ar_q: "عندما تقرر مدرسة تركيب كاميرات للتعرف على الوجه، ما القاعدة الأخلاقية الملزمة؟",
+            en_q: "When a school implements facial recognition cameras, which ethical guideline is mandatory?",
+            options: [
+                { ar: "نشر البث المباشر للجمهور عبر وسائل التواصل", en: "Broadcasting real-time campus feeds on social media" },
+                { ar: "تحديد الغرض بدقة، وتأمين البيانات، والحصول على موافقة قانونية صريحة", en: "Strict purpose limitation, data encryption, and transparent parental consent" },
+                { ar: "مشاركة وجوه الطلاب مع وكالات الإعلانات التجارية", en: "Selling student biometric maps to advertising brokers" },
+                { ar: "مراقبة المعلمين والطلاب في الأماكن الخاصة دون علمهم", en: "Installing covert cameras inside private rooms" }
+            ],
+            correct: 1,
+            exp_ar: "تفرض الضوابط الأخلاقية تحديد غرض الحضور بوضوح، وحفظ البيانات مشفرة، وضمان موافقة المعنيين (كتاب ص 29).",
+            exp_en: "Ethical standards require strict purpose binding, hardened cryptographic storage, and informed stakeholder consent (Textbook p. 29)."
+        },
+        {
+            ar_q: "المصطلح الذي يشير إلى 'الأدوار والواجبات المرتبطة بتطوير وتشغيل واستخدام النظام':",
+            en_q: "What term denotes 'the roles and duties associated with developing, operating, and using a system'?",
+            options: [
+                { ar: "المسؤولية (Responsibility)", en: "Responsibility" },
+                { ar: "التحيز الخوارزمي (Bias)", en: "Algorithmic Bias" },
+                { ar: "الترميز الثنائي (Binary)", en: "Binary Encoding" },
+                { ar: "الرقمنة (Digitization)", en: "Digitization" }
+            ],
+            correct: 0,
+            exp_ar: "المسؤولية تعني تحديد أدوار وواجبات الأطراف المرتبطة بتطوير النظام وتشغيله واستخدامه (كتاب ص 26).",
+            exp_en: "Responsibility designates the technical, operational, and ethical obligations across stakeholder tiers (Textbook p. 26)."
+        },
+        {
+            ar_q: "إذا كانت دقة الخوارزمية 98% لمجموعة ما لكنها تهبط إلى 60% مع مجموعة أخرى، فإن الخلل يتعلق بـ:",
+            en_q: "If algorithm accuracy is 98% for group A but drops to 60% for group B, the primary issue concerns:",
+            options: [
+                { ar: "سرعة خطوط الاتصال بالإنترنت", en: "Internet physical transmission speeds" },
+                { ar: "العدالة والتحيز الخوارزمي", en: "Fairness and Algorithmic Bias" },
+                { ar: "سعة بطاقة الذاكرة العشوائية", en: "RAM hardware size parameters" },
+                { ar: "نوع لغة البرمجة المستخدمة", en: "Programming language syntax family" }
+            ],
+            correct: 1,
+            exp_ar: "التفاوت الحاد في نسب الخطأ بين الفئات هو الدليل الأبرز على التحيز الخوارزمي وانتهاك مبدأ العدالة (كتاب ص 25 و 27).",
+            exp_en: "Severe error-rate disparity between subgroups is classic empirical proof of algorithmic bias and unfairness (Textbook p. 25, 27)."
+        },
+        {
+            ar_q: "ما هي العبارة التي تلخص الفكرة الرئيسة للدرس 1-4 بشأن الاستخدام المسؤول للذكاء الاصطناعي؟",
+            en_q: "Which statement encapsulates the core takeaway of Lesson 1-4 on responsible AI stewardship?",
+            options: [
+                { ar: "الذكاء الاصطناعي معصوم عن الخطأ ويجب الاعتماد التام عليه", en: "AI models are inherently infallible and should dictate decisions" },
+                { ar: "إذا كانت بيانات التدريب متحيزة كرر النظام هذا التحيز؛ لذا فالمسؤولية تعني التحقق من التحيز، وشرح القرارات، ومعرفة المسؤول", en: "If training data is biased, AI replicates it; responsible use means auditing bias, explaining decisions, and knowing who is accountable" },
+                { ar: "القرارات الأخلاقية يمكن تركها كلياً للخوارزميات المغلقة", en: "Moral decisions can safely be outsourced to closed-box models" },
+                { ar: "يجب تجنب تطوير البرمجيات لمنع أي معضلات مجتمعية", en: "Software innovation should be ceased to prevent ethical friction" }
+            ],
+            correct: 1,
+            exp_ar: "نصت الفكرة الرئيسة: 'إذا كانت بيانات التدريب متحيزة، يمكن للذكاء الاصطناعي أن يكرر هذا التحيز؛ واستخدامه بمسؤولية يعني التحقق من التحيز والقدرة على شرح القرارات ومعرفة من المسؤول' (كتاب ص 27 و 29).",
+            exp_en: "Official Lesson 1-4 Summary: Biased data yields biased systems; responsible use mandates auditing bias, explaining logic, and enforcing accountability (Textbook p. 27, 29)."
+        }
+    ];
+
+    let userAnswers = new Array(questions.length).fill(null);
+    let currentIdx = 0;
+    let score = 0;
+
+    function loadScores() {
+        const storedHigh = localStorage.getItem('ai_lesson4_indexed_highscore');
+        const high = storedHigh ? parseInt(storedHigh) : 0;
+        document.getElementById('highScore').innerText = high;
+
+        const storedFirst = localStorage.getItem('ai_lesson4_first_score');
+        if (storedFirst !== null) {
+            document.getElementById('firstScore').innerText = storedFirst;
+        } else {
+            document.getElementById('firstScore').innerText = "--";
+        }
+        return { high, first: storedFirst };
+    }
+
+    function saveScores(finalScore) {
+        let isFirstTime = false;
+        if (localStorage.getItem('ai_lesson4_first_score') === null) {
+            localStorage.setItem('ai_lesson4_first_score', finalScore);
+            document.getElementById('firstScore').innerText = finalScore;
+            isFirstTime = true;
+        }
+
+        const currentHigh = parseInt(localStorage.getItem('ai_lesson4_indexed_highscore') || '0');
+        let isNewHigh = false;
+        if (finalScore > currentHigh) {
+            localStorage.setItem('ai_lesson4_indexed_highscore', finalScore);
+            document.getElementById('highScore').innerText = finalScore;
+            isNewHigh = true;
+        }
+
+        return { isFirstTime, isNewHigh };
+    }
+
+    function calculateScore() {
+        let s = 0;
+        for (let i = 0; i < questions.length; i++) {
+            if (userAnswers[i] !== null && userAnswers[i] === questions[i].correct) {
+                s++;
+            }
+        }
+        score = s;
+        document.getElementById('score').innerText = score;
+        return score;
+    }
+
+    function displayQuestion() {
+        const q = questions[currentIdx];
+        document.getElementById('qCurrent').innerText = currentIdx + 1;
+        document.getElementById('questionTextAr').innerText = (currentIdx + 1) + ". " + q.ar_q;
+        document.getElementById('questionTextEn').innerText = "Q" + (currentIdx + 1) + ": " + q.en_q;
+
+        const answeredCount = userAnswers.filter(a => a !== null).length;
+        const pct = (answeredCount / questions.length) * 100;
+        document.getElementById('progressBar').style.width = pct + '%';
+
+        const container = document.getElementById('optionsContainer');
+        container.innerHTML = '';
+
+        const expBox = document.getElementById('explanationText');
+        const statusIndicator = document.getElementById('qStatusIndicator');
+        const prevAns = userAnswers[currentIdx];
+
+        if (prevAns === null) {
+            statusIndicator.innerText = "لم يُجب بعد / Not answered";
+            statusIndicator.style.color = "var(--text-muted)";
+            expBox.style.display = 'none';
+        } else {
+            statusIndicator.innerText = prevAns === q.correct ? "✅ إجابة صحيحة مسجلة" : "❌ إجابة خاطئة مسجلة";
+            statusIndicator.style.color = prevAns === q.correct ? "var(--success)" : "var(--danger)";
+            showExplanation(prevAns === q.correct, prevAns);
+        }
+
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerHTML = `
+                <div class="opt-ar">${['أ', 'ب', 'ج', 'د'][idx]}) ${opt.ar}</div>
+                <div class="opt-en">${['A', 'B', 'C', 'D'][idx]}) ${opt.en}</div>
+            `;
+
+            if (prevAns !== null) {
+                btn.disabled = true;
+                if (idx === q.correct) {
+                    btn.classList.add('correct');
+                } else if (idx === prevAns) {
+                    btn.classList.add('wrong');
+                }
+            } else {
+                btn.onclick = () => selectAnswer(idx);
+            }
+            container.appendChild(btn);
+        });
+
+        document.getElementById('prevBtn').disabled = (currentIdx === 0);
+        document.getElementById('nextBtn').innerText = (currentIdx === questions.length - 1) ? "إنهاء الاختبار / Finish 🏁" : "التالي / Next ⬅️";
+    }
+
+    function selectAnswer(chosenIdx) {
+        if (userAnswers[currentIdx] !== null) return;
+
+        userAnswers[currentIdx] = chosenIdx;
+        calculateScore();
+
+        const q = questions[currentIdx];
+        const isCorrect = (chosenIdx === q.correct);
+
+        const buttons = document.querySelectorAll('.opt-btn');
+        buttons.forEach(b => b.disabled = true);
+
+        if (isCorrect) {
+            buttons[chosenIdx].classList.add('correct');
+        } else {
+            buttons[chosenIdx].classList.add('wrong');
+            buttons[q.correct].classList.add('correct');
+        }
+
+        showExplanation(isCorrect, chosenIdx);
+
+        const statusIndicator = document.getElementById('qStatusIndicator');
+        statusIndicator.innerText = isCorrect ? "✅ إجابة صحيحة مسجلة" : "❌ إجابة خاطئة مسجلة";
+        statusIndicator.style.color = isCorrect ? "var(--success)" : "var(--danger)";
+
+        const answeredCount = userAnswers.filter(a => a !== null).length;
+        document.getElementById('progressBar').style.width = ((answeredCount / questions.length) * 100) + '%';
+    }
+
+    function showExplanation(isCorrect, chosenIdx) {
+        const q = questions[currentIdx];
+        const expBox = document.getElementById('explanationText');
+
+        if (isCorrect) {
+            expBox.innerHTML = `
+                <b>✅ إجابة صحيحة / Correct!</b><br>
+                <div>${q.exp_ar}</div>
+                <div class="exp-en">${q.exp_en}</div>
+            `;
+            expBox.style.borderRightColor = 'var(--success)';
+        } else {
+            expBox.innerHTML = `
+                <b>❌ إجابة غير دقيقة / Incorrect!</b><br>
+                <div>الإجابة الصحيحة هي: <b>${q.options[q.correct].ar}</b></div>
+                <div class="exp-en">Correct choice: <b>${q.options[q.correct].en}</b></div>
+                <div style="margin-top: 6px;">${q.exp_ar}</div>
+                <div class="exp-en">${q.exp_en}</div>
+            `;
+            expBox.style.borderRightColor = 'var(--danger)';
+        }
+        expBox.style.display = 'block';
+    }
+
+    function nextQuestion() {
+        if (currentIdx < questions.length - 1) {
+            currentIdx++;
+            displayQuestion();
+        } else {
+            showFinalResults();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentIdx > 0) {
+            currentIdx--;
+            displayQuestion();
+        }
+    }
+
+    function openIndexModal() {
+        buildIndexGrid();
+        document.getElementById('indexModal').style.display = 'flex';
+    }
+
+    function closeIndexModal() {
+        document.getElementById('indexModal').style.display = 'none';
+    }
+
+    function closeIndexModalOnOutside(e) {
+        if (e.target.id === 'indexModal') {
+            closeIndexModal();
+        }
+    }
+
+    function buildIndexGrid() {
+        const grid = document.getElementById('gridIndexContainer');
+        grid.innerHTML = '';
+
+        for (let i = 0; i < questions.length; i++) {
+            const pill = document.createElement('div');
+            pill.className = 'index-pill';
+            pill.innerText = (i + 1);
+
+            if (i === currentIdx) {
+                pill.classList.add('active');
+            }
+
+            if (userAnswers[i] !== null) {
+                if (userAnswers[i] === questions[i].correct) {
+                    pill.classList.add('solved-correct');
+                } else {
+                    pill.classList.add('solved-wrong');
+                }
+            }
+
+            pill.onclick = () => {
+                currentIdx = i;
+                displayQuestion();
+                closeIndexModal();
+            };
+
+            grid.appendChild(pill);
+        }
+    }
+
+    function showFinalResults() {
+        document.getElementById('quizCard').style.display = 'none';
+        document.getElementById('progressBar').style.width = '100%';
+
+        const resultsCard = document.getElementById('resultsCard');
+        resultsCard.style.display = 'block';
+
+        calculateScore();
+        document.getElementById('finalScore').innerText = score;
+        const res = saveScores(score);
+        const scores = loadScores();
+
+        const notice = document.getElementById('highScoreNotice');
+        const msg = document.getElementById('resultMsg');
+        const icon = document.getElementById('trophyIcon');
+
+        let textDetails = `🎯 أول محاولة مسجلة (First Attempt): ${scores.first} من 30<br>`;
+        if (res.isNewHigh && score > 0) {
+            textDetails += `🏆 مبروك! حققت رقماً قياسياً جديداً (New High Score): ${score} من 30!`;
+        } else {
+            textDetails += `🏆 أعلى نتيجة على هذا الجهاز (Best Score): ${scores.high} من 30`;
+        }
+        notice.innerHTML = textDetails;
+
+        if (score >= 27) {
+            msg.innerText = "ممتاز وفوق العادة! / Outstanding Master!";
+            icon.innerText = "👑";
+        } else if (score >= 21) {
+            msg.innerText = "جيد جداً! استيعاب قوي / Very Good Performance!";
+            icon.innerText = "🎉";
+        } else if (score >= 15) {
+            msg.innerText = "مستوى متوسط، راجع الدرس مجدداً / Needs Review!";
+            icon.innerText = "👍";
+        } else {
+            msg.innerText = "يُنصح بإعادة دراسة الدرس بتركيز / Re-study Recommended!";
+            icon.innerText = "💡";
+        }
+    }
+
+    function restartQuiz() {
+        userAnswers = new Array(questions.length).fill(null);
+        currentIdx = 0;
+        score = 0;
+        document.getElementById('score').innerText = '0';
+        document.getElementById('resultsCard').style.display = 'none';
+        document.getElementById('quizCard').style.display = 'block';
+        displayQuestion();
+    }
+
+    window.onload = function() {
+        loadScores();
+        displayQuestion();
+    };
+</script>
+</body>
+</html>
